@@ -105,10 +105,10 @@
   const photo = (b, w = 760) => "https://images.unsplash.com/" +
       photoIds[((Number(b?.color ?? b?.id ?? 0) % photoIds.length) + photoIds.length) % photoIds.length] +
       "?auto=format&fit=crop&w=" + w + "&q=82";
-  const cover = b => b && /^\\d{13}$/.test(String(b.isbn || "")) ?
-    "https://covers.openlibrary.org/b/isbn/" + b.isbn + "-L.jpg" : null;
+  const cover = b => b && /^\d{13}$/.test(String(b.isbn || "")) ?
+    "https://covers.openlibrary.org/b/isbn/" + b.isbn + "-L.jpg?default=false" : null;
   const coverImage = (b, kind = "") => '<img class="real-cover ' + kind + '" src="' +
-    esc(cover(b) || photo(b,400)) + '" alt="Portada de ' + esc(b?.title || "libro") +
+    esc(cover(b) || photo(b,400)) + '" data-fallback="' + esc(photo(b,400)) + '" alt="Portada de ' + esc(b?.title || "libro") +
     '" loading="lazy" decoding="async">';
     let genreFilter = "todos", catalogSort = "titulo", loanFilter = "todos", viewMode = "grid";
   if (!Array.isArray(db.favorites)) db.favorites = [];
@@ -691,6 +691,13 @@ if (formElement.id === "form-book") {
       e.preventDefault();$("#global-search").focus();
     }
   });
+  document.addEventListener("error", ev => {
+    const img=ev.target;
+    if (!img?.classList?.contains("real-cover")) return;
+    if (img.dataset.usedFallback) return;
+    img.dataset.usedFallback="true";
+    img.src=img.dataset.fallback || "";
+  }, true);
   window.addEventListener("hashchange", render);
   $("#close-modal").addEventListener("click", closeModal);
   modal.addEventListener("click",ev=>{ if (ev.target===modal) closeModal(); });
