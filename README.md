@@ -10,7 +10,7 @@
 
 Una biblioteca digital para descubrir libros, gestionar préstamos, organizar eventos y explorar una API REST desarrollada con Java y Spring Boot.
 
-### [Explorar la plataforma web](https://juanjogamero.github.io/MrBibliomante-Sistema-de-Gestion-Bibliotecaria/ )
+### [Explorar la plataforma web](https://juanjogamero.github.io/MrBibliomante-Sistema-de-Gestion-Bibliotecaria/)
 
 [Ver la demostración interactiva](https://juanjogamero.github.io/MrBibliomante-Sistema-de-Gestion-Bibliotecaria/) · [Documentación técnica](Documentacion/GUIA_TECNICA.md) · [Código de la API](Codigo/src/main/java/com/mrbibliomante)
 
