@@ -117,11 +117,32 @@
   const photo = (b, w = 760) => "https://images.unsplash.com/" +
       photoIds[((Number(b?.color ?? b?.id ?? 0) % photoIds.length) + photoIds.length) % photoIds.length] +
       "?auto=format&fit=crop&w=" + w + "&q=82";
-  const cover = b => b && /^\d{13}$/.test(String(b.isbn || "")) ?
-    "https://covers.openlibrary.org/b/isbn/" + b.isbn + "-L.jpg?default=false" : null;
-  const coverImage = (b, kind = "") => '<img class="real-cover ' + kind + '" src="' +
-    esc(cover(b) || "cover-placeholder.svg") + '" data-fallback="cover-placeholder.svg" alt="Portada de ' +
-    esc(b?.title || "libro") + '" loading="lazy" decoding="async">';
+
+  // Datos de portada de ediciones verificadas en Open Library; la imagen por
+  // ISBN solo se usa para otros ejemplares. Ninguna foto de biblioteca se usa
+  // como sustituto de la portada de un libro.
+  const coverOverrides = {
+    "La sombra del viento": "https://covers.openlibrary.org/b/id/7430386-L.jpg?default=false",
+    "El nombre del viento": "https://covers.openlibrary.org/b/olid/OL38586224M-L.jpg?default=false"
+  };
+  const coverFallback = b => {
+    if (b?.title === "La sombra del viento") return "covers/sombra-del-viento.svg";
+    if (b?.title === "El nombre del viento") return "covers/nombre-del-viento.svg";
+    return "cover-placeholder.svg";
+  };
+  const cover = b => {
+    if (!b) return "cover-placeholder.svg";
+    if (coverOverrides[b.title]) return coverOverrides[b.title];
+    if (/^\d{13}$/.test(String(b.isbn || ""))) {
+      return "https://covers.openlibrary.org/b/isbn/" + b.isbn + "-L.jpg?default=false";
+    }
+    return coverFallback(b);
+  };
+  const coverImage = (b, kind = "") =>
+    '<img class="real-cover ' + kind + '" src="' + esc(cover(b)) +
+    '" data-fallback="' + esc(coverFallback(b)) +
+    '" alt="Portada de ' + esc(b?.title || "libro") + '" loading="lazy" decoding="async">';
+
   let genreFilter = "todos", catalogSort = "titulo", loanFilter = "todos", viewMode = "grid";
   if (!Array.isArray(db.favorites)) db.favorites = [];
   const fav = id => db.favorites.includes(Number(id));
@@ -307,35 +328,141 @@
       'en http://localhost:8080/swagger-ui.html.</div></div></div></div>';
   }
   
+
+  // Textos editoriales de las obras de ejemplo. Para libros añadidos por el
+  // visitante no se inventan sinopsis ni reseñas.
+  const editorialInfo = {
+    "La sombra del viento": [
+      "Barcelona, 1945. Daniel Sempere descubre un libro misterioso en el Cementerio de los Libros Olvidados. Su fascinación por la historia y su autor lo llevará a seguir las huellas de un pasado lleno de secretos.",
+      "Una novela sobre el poder de las historias, la memoria y los lugares que guardan los libros."
+    ],
+    "Cien años de soledad": [
+      "La historia de la familia Buendía se entrelaza con el nacimiento y la transformación de Macondo, un pueblo donde lo cotidiano y lo extraordinario conviven con absoluta naturalidad.",
+      "Una saga familiar que explora el tiempo, la memoria, la soledad y el destino a través de generaciones."
+    ],
+    "El nombre del viento": [
+      "Kvothe, ahora un posadero apartado del mundo, decide contar la verdadera historia de su vida: su infancia entre artistas ambulantes, el aprendizaje de la música y la magia y su llegada a la Universidad.",
+      "El comienzo de una aventura fantástica marcada por el conocimiento, los mitos y una tragedia que todavía lo persigue."
+    ],
+    "1984": [
+      "Winston Smith vive en una sociedad sometida a la vigilancia permanente del Gran Hermano. Mientras el poder controla la información y el lenguaje, empieza a cuestionar la realidad que le rodea.",
+      "Una distopía clásica sobre la libertad, la manipulación y el control de la verdad."
+    ],
+    "El principito": [
+      "Un aviador perdido en el desierto conoce a un pequeño viajero que ha recorrido diferentes planetas. Sus conversaciones revelan otra manera de mirar la amistad, el cariño y lo verdaderamente importante.",
+      "Una historia breve y poética que invita a recuperar la curiosidad y la sensibilidad."
+    ],
+    "Los pilares de la Tierra": [
+      "En la Inglaterra medieval, la construcción de una gran catedral reúne las vidas de artesanos, familias y poderosos personajes en el pueblo de Kingsbridge.",
+      "Una novela histórica de ambición, conflictos y perseverancia en torno a una obra que atraviesa generaciones."
+    ]
+  };
+
+  
 function bookDetailView(b) {
-  const free=available(b),loans=db.loans.filter(p=>p.bookId===b.id).slice().reverse(), related=db.books.filter(x=>x.id!==b.id && x.genre===b.genre).slice(0,3);
-  return '<div class="detail-top">'+back("libros","Volver al catálogo")+'<span>CATÁLOGO / LIBRO #'+String(b.id).padStart(3,"0")+'</span></div>'+
-    '<section class="book-detail"><div class="detail-photo"><img class="real-cover" data-fallback="cover-placeholder.svg" src="'+(cover(b)||"cover-placeholder.svg")+'" alt="Portada bibliográfica de Open Library">'+
-    '<div class="photo-source">Portada · Open Library</div></div>'+
-    '<div class="detail-content"><span class="eyebrow">COLECCIÓN / '+esc(b.genre).toUpperCase()+'</span>'+
-    '<h1>'+esc(b.title)+'</h1><p class="detail-author">de <strong>'+esc(b.author)+'</strong></p>'+
-    '<div class="detail-rule"></div><div class="availability-row">'+
-    (free?badge("Disponible","green"):badge("No disponible","red"))+
-    '<span>'+free+' de '+b.copies+' ejemplares libres</span></div>'+
-    '<div class="detail-progress"><span style="width:'+Math.max(0,Math.min(100,free/Math.max(1,b.copies)*100))+'%"></span></div>'+
-    '<div class="detail-buttons">'+actionButton("Registrar préstamo","loan","arrow","btn btn-coral", 'data-id="'+b.id+'"'+(free?"":" disabled"))+
-    '<button class="btn favorite-btn'+(fav(b.id)?" is-favorite":"")+'" data-action="favorite" data-id="'+b.id+'" aria-pressed="'+fav(b.id)+'">'+(fav(b.id)?"♥ Guardado":"♡ Guardar")+'</button>'+
-    '<button class="btn btn-ghost" data-action="edit-book" data-id="'+b.id+'">Editar libro</button></div>'+
-    '<p class="detail-note">Portadas ofrecidas por Open Library en función del ISBN.</p>'+
-    '<div class="detail-metadata"><div><span>ISBN</span><strong>'+esc(b.isbn||"Sin registrar")+'</strong></div>'+
-    '<div><span>Idioma</span><strong>'+esc(b.language||"Español")+'</strong></div>'+
-    '<div><span>Género</span><strong>'+esc(b.genre)+'</strong></div>'+
-    '<div><span>Ejemplares</span><strong>'+b.copies+'</strong></div></div></div></section>'+
-    '<div class="detail-lower"><div class="panel modern-panel"><div class="panel-heading"><h3>Historial de préstamos</h3><span>'+loans.length+' movimientos</span></div>'+
-    (loans.length?loans.map(p=>'<a class="history-row" href="#prestamos/'+p.id+'"><span class="history-icon">'+icon("return")+'</span>'+
-      '<span><strong>'+esc(user(p.userId)?.name||"Lector")+'</strong><small>'+prettyDate(p.start)+' · Hasta '+prettyDate(p.end)+'</small></span>'+
-      statStatus(loanStatus(p))+'<span class="history-arrow">↗</span></a>').join(""):'<p class="muted">Este libro todavía no tiene préstamos.</p>')+
-    '</div><div class="panel modern-panel"><div class="panel-heading"><h3>De la misma categoría</h3></div>'+
-    (related.length?related.map(r=>'<a class="mini-loan" href="#libros/'+r.id+'"><img class="real-cover" data-fallback="cover-placeholder.svg" src="'+(cover(r)||"cover-placeholder.svg")+'" alt="" loading="lazy">'+
-      '<span><strong>'+esc(r.title)+'</strong><small>'+esc(r.author)+'</small></span><span class="mini-end">↗</span></a>').join("") :
-      '<p class="muted">Descubre el resto de la colección en el catálogo.</p>')+
-    '<a class="inline-link" href="#libros">Explorar catálogo →</a></div></div>';
+  const free = available(b), active = liveLoans(b.id).length,
+    loans = db.loans.filter(p => p.bookId === b.id).slice().reverse(),
+    related = db.books.filter(x => x.id !== b.id && x.genre === b.genre).slice(0, 4),
+    text = editorialInfo[b.title] || [
+      "Este título forma parte de la colección de MrBibliomante. Aquí puedes consultar su ficha bibliográfica, comprobar las existencias y gestionar sus préstamos.",
+      "Toda la información sobre ejemplares y movimientos se actualiza al utilizar la biblioteca."
+    ];
+  const image = coverImage(b, "reading-main-cover");
+  return '<div class="reading-page">' +
+    '<div class="detail-top reading-top">' + back("libros", "Volver al catálogo") +
+    '<span>THE BOOKS <i>/</i> ' + esc(b.genre).toUpperCase() + ' <i>/</i> LIBRO ' +
+    String(b.id).padStart(3, "0") + '</span></div>' +
+    '<section class="reading-showcase" aria-labelledby="reading-title">' +
+      '<div class="reading-upper">' +
+        '<div class="reading-artwork"><div class="reading-cover-halo"></div>' +
+          '<div class="reading-cover-inner">' + image + '</div>' +
+          '<span class="reading-artwork-index">EDICIÓN BIBLIOTECA <span>— ' + String(b.id).padStart(3, "0") + '</span></span>' +
+        '</div>' +
+        '<div class="reading-heading">' +
+          '<div class="reading-kicker"><span class="reading-dot"></span> COLECCIÓN / ' + esc(b.genre).toUpperCase() + '</div>' +
+          '<h1 id="reading-title">' + esc(b.title) + '</h1>' +
+          '<p class="reading-author">' + esc(b.author) + '</p>' +
+          '<p class="reading-lead">' + esc(text[0]) + '</p>' +
+          '<div class="reading-availability">' +
+            (free ? badge("Disponible para préstamo", "green") : badge("Sin ejemplares libres", "red")) +
+            '<span>' + free + ' de ' + b.copies + ' ejemplares disponibles</span>' +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="reading-action-row">' +
+        '<div class="reading-action-spacer"><span>UNA HISTORIA POR DESCUBRIR</span></div>' +
+        '<div class="reading-action-main">' +
+          actionButton("Registrar préstamo", "loan", "arrow", "btn btn-primary reading-main-action",
+            'data-id="' + b.id + '"' + (free ? "" : " disabled")) +
+          '<button class="reading-icon-action' + (fav(b.id) ? ' is-saved' : '') +
+            '" type="button" data-action="favorite" data-id="' + b.id +
+            '" aria-label="' + (fav(b.id) ? 'Quitar de favoritos' : 'Guardar en favoritos') +
+            '" aria-pressed="' + fav(b.id) + '" title="Guardar libro">' + icon("heart") + '</button>' +
+          '<button class="reading-icon-action" type="button" data-action="copy-book-link" data-id="' +
+            b.id + '" aria-label="Copiar enlace del libro" title="Copiar enlace">' + icon("external") + '</button>' +
+          '<button class="reading-edit-action" type="button" data-action="edit-book" data-id="' + b.id +
+            '">Editar ficha <span aria-hidden="true">↗</span></button>' +
+        '</div>' +
+      '</div>' +
+    '</section>' +
+    '<section class="reading-information">' +
+      '<div class="reading-description">' +
+        '<span class="reading-section-mark">01 / LA HISTORIA</span>' +
+        '<h2>Descripción</h2>' +
+        '<p>' + esc(text[0]) + '</p>' +
+        '<p>' + esc(text[1]) + '</p>' +
+        '<div class="reading-stock-block">' +
+          '<div class="reading-stock-title"><strong>Disponibilidad del libro</strong>' +
+            '<span>' + free + ' disponibles · ' + active + ' en circulación</span></div>' +
+          '<div class="reading-progress" role="meter" aria-label="Ejemplares disponibles" aria-valuemin="0" ' +
+            'aria-valuemax="' + Math.max(1, b.copies) + '" aria-valuenow="' + free + '">' +
+            '<span style="width:' + Math.max(0, Math.min(100, free / Math.max(1, b.copies) * 100)) + '%"></span></div>' +
+          '<p>El stock se actualiza al registrar préstamos y devoluciones.</p>' +
+        '</div>' +
+      '</div>' +
+      '<aside class="reading-facts" aria-labelledby="reading-facts-heading">' +
+        '<span class="reading-section-mark">02 / EL LIBRO</span>' +
+        '<h2 id="reading-facts-heading">Ficha bibliográfica</h2>' +
+        '<dl class="reading-fact-list">' +
+          '<div><dt>Autor</dt><dd>' + esc(b.author) + '</dd></div>' +
+          '<div><dt>Género</dt><dd>' + esc(b.genre) + '</dd></div>' +
+          '<div><dt>Idioma</dt><dd>' + esc(b.language || "Español") + '</dd></div>' +
+          '<div><dt>ISBN</dt><dd>' + esc(b.isbn || "No registrado") + '</dd></div>' +
+          '<div><dt>Ejemplares</dt><dd>' + b.copies + '</dd></div>' +
+          '<div><dt>Préstamos registrados</dt><dd>' + loans.length + '</dd></div>' +
+        '</dl>' +
+      '</aside>' +
+    '</section>' +
+    '<section class="reading-related-area">' +
+      '<div class="reading-history-panel">' +
+        '<div class="reading-panel-title"><div><span class="reading-section-mark">03 / CIRCULACIÓN</span>' +
+          '<h2>Historial de préstamos</h2></div>' +
+          '<span class="reading-count">' + loans.length + ' movimientos</span></div>' +
+        (loans.length ? '<div class="reading-history-list">' + loans.map(p =>
+          '<a href="#prestamos/' + p.id + '" class="reading-history-item">' +
+            '<span class="reading-history-symbol">' + icon("return") + '</span>' +
+            '<span class="reading-history-data"><strong>' + esc(user(p.userId)?.name || "Lector") + '</strong>' +
+              '<small>' + prettyDate(p.start) + ' — ' + prettyDate(p.end) + '</small></span>' +
+            statStatus(loanStatus(p)) + '<span class="reading-history-arrow">↗</span></a>'
+          ).join("") + '</div>' :
+          '<p class="reading-empty">Todavía no hay préstamos de este título.</p>') +
+      '</div>' +
+      '<div class="reading-similar-panel">' +
+        '<div class="reading-panel-title"><div><span class="reading-section-mark">04 / DESCUBRE</span>' +
+          '<h2>De la misma categoría</h2></div></div>' +
+        (related.length ? '<div class="reading-similar-list">' + related.map(r =>
+          '<a href="#libros/' + r.id + '" class="reading-similar-item">' +
+            '<span class="reading-similar-image">' + coverImage(r) + '</span>' +
+            '<span><strong>' + esc(r.title) + '</strong><small>' + esc(r.author) + '</small></span>' +
+            '<span class="reading-similar-arrow">↗</span></a>'
+          ).join("") + '</div>' :
+          '<p class="reading-empty">Descubre más historias en nuestro catálogo.</p>') +
+        '<a class="reading-explore" href="#libros">Explorar todos los libros ' + icon("arrow") + '</a>' +
+      '</div>' +
+    '</section>' +
+  '</div>';
 }
+
 function loanDetailView(p) {
   const b=book(p.bookId),u=user(p.userId),s=loanStatus(p);
   return '<div class="detail-top">'+back("prestamos","Volver a préstamos")+'<span>PRÉSTAMOS / #'+String(p.id).padStart(3,"0")+'</span></div>'+
@@ -457,6 +584,22 @@ function render() {
       name + '" name="' + name + '" required><option value="">Selecciona una opción</option>' + options + '</select></div>';
   }
   function openAction(action, id) {
+
+    if (action === "copy-book-link") {
+      const b = book(id);
+      if (!b) return;
+      const url = location.href.split("#")[0] + "#libros/" + b.id;
+      if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
+        navigator.clipboard.writeText(url)
+          .then(() => toast("Enlace del libro copiado."))
+          .catch(() => openModal("Compartir ficha", '<p class="modal-desc">Copia este enlace para compartir el libro.</p>' +
+            '<div class="form-field"><label>Enlace de la ficha</label><input readonly value="' + esc(url) + '"></div>'));
+      } else {
+        openModal("Compartir ficha", '<p class="modal-desc">Copia este enlace para compartir el libro.</p>' +
+          '<div class="form-field"><label>Enlace de la ficha</label><input readonly value="' + esc(url) + '"></div>');
+      }
+      return;
+    }
     if (action === "favorites") {
       filter = "favoritos"; genreFilter="todos"; search=""; $("#global-search").value="";
       location.hash="#libros";render();return;
@@ -708,7 +851,20 @@ if (formElement.id === "form-book") {
     if (!img?.classList?.contains("real-cover")) return;
     if (img.dataset.usedFallback) return;
     img.dataset.usedFallback="true";
-    img.src=img.dataset.fallback || "";
+    img.src=img.dataset.fallback || "cover-placeholder.svg";
+  }, true);
+
+  // Rechazar también respuestas que devuelven una fotografía horizontal o un
+  // marcador de 1x1 como si fuera la portada. Los fallback locales son siempre
+  // verticales, y no se vuelve a reintentar indefinidamente.
+  document.addEventListener("load", ev => {
+    const img = ev.target;
+    if (!img?.classList?.contains("real-cover") || img.dataset.usedFallback) return;
+    const width = img.naturalWidth || 0, height = img.naturalHeight || 0;
+    if (!width || !height || width / height > 0.88) {
+      img.dataset.usedFallback = "true";
+      img.src = img.dataset.fallback || "cover-placeholder.svg";
+    }
   }, true);
   window.addEventListener("hashchange", render);
   $("#close-modal").addEventListener("click", closeModal);
