@@ -6,11 +6,11 @@
 
 [![Abrir demo interactiva](https://img.shields.io/badge/ABRIR_LA_DEMO_INTERACTIVA-E98262?style=for-the-badge&logo=githubpages&logoColor=white)](https://juanjogamero.github.io/API-MrBibliomante/)
 
-### Prueba MrBibliomante desde tu navegador, sin instalar nada.
+### Una biblioteca digital que puedes explorar desde el navegador.
 
 **[juanjogamero.github.io/API-MrBibliomante](https://juanjogamero.github.io/API-MrBibliomante/)**
 
-Un pequeño proyecto de biblioteca convertido en una experiencia que puedes explorar, probar y utilizar.
+Una experiencia con diseño editorial, fotografías, fichas interactivas y gestión de préstamos y eventos. **Sin instalar nada.**
 
 </div>
 
@@ -20,13 +20,17 @@ Un pequeño proyecto de biblioteca convertido en una experiencia que puedes expl
 
 | Explorar la biblioteca | Gestionar préstamos |
 | :--- | :--- |
-| Descubre libros, busca por título y comprueba los ejemplares disponibles. | Presta libros a lectores, registra devoluciones y consulta los vencimientos. |
+| Explora libros con fotografías, filtros, favoritos y fichas individuales con disponibilidad. | Registra préstamos y devoluciones; consulta cada movimiento con su estado e historial. |
 
 | Organizar eventos | Registrar lectores |
 | :--- | :--- |
-| Crea encuentros literarios y gestiona inscripciones y aforos. | Da de alta lectores y consulta sus préstamos. |
+| Explora la agenda cultural, abre fichas de eventos y gestiona plazas e inscripciones. | Da de alta lectores y revisa sus perfiles, préstamos y actividades. |
 
 > **Prueba libremente.** La web es una demo interactiva con datos ficticios: los cambios se guardan solo en tu navegador y puedes restablecerlos cuando quieras. La demo no está conectada a la API Java.
+
+### Diseño renovado
+
+Una interfaz minimalista y más cuidada: botones, tarjetas, filtros, formularios y estados coherentes en móvil y escritorio. **[Explorar la demo →](https://juanjogamero.github.io/API-MrBibliomante/)**
 
 ### Detrás del proyecto
 

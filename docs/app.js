@@ -121,13 +121,17 @@
     return '<article class="book-card book-card-v2">' +
       '<a class="photo-frame" href="#libros/' + b.id + '" aria-label="Ver ficha de ' + esc(b.title) + '">' +
       '<img src="' + photo(b,720) + '" loading="lazy" decoding="async" alt="Fotografía editorial de libros, ilustrativa" />' +
-      '<span class="photo-caption">Fotografía de ambiente</span></a>' +
+      '<span class="photo-caption">Biblioteca / Colección</span></a>' +
+      '<button type="button" class="favorite-overlay' + (fav(b.id) ? ' is-favorite' : '') +
+      '" data-action="favorite" data-id="' + b.id + '" aria-label="' +
+      (fav(b.id) ? 'Quitar de favoritos: ' : 'Guardar en favoritos: ') + esc(b.title) + '" aria-pressed="' + fav(b.id) +
+      '" title="' + (fav(b.id) ? 'Quitar de favoritos' : 'Guardar en favoritos') + '">' + (fav(b.id) ? '♥' : '♡') + '</button>' +
       '<div class="book-info"><div class="book-eyebrow">' + esc(b.genre) + ' <span>·</span> ' + esc(b.language || "Español") + '</div>' +
       '<a class="book-title-link" href="#libros/' + b.id + '"><h3>' + esc(b.title) + '</h3></a>' +
       '<p class="author-name">' + esc(b.author) + '</p>' +
       '<div class="book-bottom">' + (free ? badge(free + ' ' + plural(free,"ejemplar","ejemplares") + ' libres',"green") : badge("Sin disponibilidad","red")) +
       '<a class="book-explore" href="#libros/' + b.id + '" aria-label="Ver detalles de ' + esc(b.title) + '">' + icon("arrow") + '</a></div></div></article>';
-}
+  }
   function stats() {
     const values = [
       {title:"Libros en catálogo",value:db.books.length,desc:"Títulos registrados",icon:"book",color:"peach"},
@@ -136,7 +140,7 @@
       {title:"Próximos eventos",value:db.events.filter(e => e.date >= today()).length,desc:"Actividades programadas",icon:"calendar",color:"purple"}
     ];
     return '<div class="stats-grid">' + values.map(s => '<article class="stat-card"><div class="stat-top"><span class="stat-icon ' +
-      s.color + '">' + icon(s.icon) + '</span>' + badge("Demo", "gray") + '</div><div class="stat-value">' +
+      s.color + '">' + icon(s.icon) + '</span><span class="stat-label-top">RESUMEN</span></div><div class="stat-value">' +
       s.value + '</div><div class="stat-label">' + s.title + '</div><div class="stat-foot">' + s.desc + '</div></article>').join("") + '</div>';
   }
   function recentActivity() {
