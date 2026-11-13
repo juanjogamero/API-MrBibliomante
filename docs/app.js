@@ -326,7 +326,7 @@
 }
   function projectView() {
     return head("EL PROYECTO", "Una API, muchas historias", "Conoce la tecnología detrás de MrBibliomante.") +
-      '<div class="info-grid"><article class="info-card"><h3>' + icon("book") + ' Backend original</h3><p>' +
+      '<div class="info-grid"><article class="info-card"><h3>' + icon("book") + ' Backend Java</h3><p>' +
       'API REST real desarrollada en Java 21, Spring Boot y Spring Data JPA, con PostgreSQL y una arquitectura organizada ' +
       'en controladores, servicios, repositorios y entidades.</p></article>' +
       '<article class="info-card"><h3>' + icon("spark") + ' Demo interactiva</h3><p>' +
@@ -335,8 +335,8 @@
       '<article class="info-card"><h3>' + icon("check") + ' Reglas de biblioteca</h3><p>' +
       'Gestiona existencias, préstamos, devoluciones, vencimientos, lectores, eventos e inscripciones. ' +
       'La versión Java implementa estas reglas en su capa de servicios.</p></article>' +
-      '<article class="info-card"><h3>' + icon("external") + ' Código abierto</h3><p>' +
-      'Puedes revisar los controladores REST, entidades JPA, pruebas automatizadas y documentación técnica en el repositorio.</p>' +
+      '<article class="info-card"><h3>' + icon("external") + ' Código y documentación</h3><p>' +
+      'Puedes consultar los controladores REST, entidades JPA, pruebas automatizadas y la documentación técnica en el repositorio.</p>' +
       '<p style="margin-top:14px"><a class="btn btn-primary" target="_blank" rel="noopener noreferrer" ' +
       'href="https://github.com/juanjogamero/MrBibliomante-Sistema-de-Gestion-Bibliotecaria">Ver en GitHub ' + icon("external") + '</a></p></article></div>' +
       section("Ejecuta la API auténtica en tu equipo") +

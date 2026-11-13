@@ -1,4 +1,4 @@
-# MrBibliomante — API REST de gestión bibliotecaria
+# MrBibliomante — Guía técnica de la API REST
 
 ![Java 21](https://img.shields.io/badge/Java-21-ED8B00?logo=openjdk&logoColor=white)
 ![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.5.5-6DB33F?logo=springboot&logoColor=white)
@@ -12,11 +12,11 @@ API REST para administrar el catálogo de una biblioteca, préstamos y devolucio
 
 ## Demo interactiva — GitHub Pages
 
-**[Abrir la demo de MrBibliomante](https://juanjogamero.github.io/API-MrBibliomante/)**
+**[Abrir la demo de MrBibliomante](https://juanjogamero.github.io/MrBibliomante-Sistema-de-Gestion-Bibliotecaria/)**
 
-La demo incluye un panel de control, catálogo de libros, lectores, préstamos y eventos. Puedes registrar nuevos libros y usuarios, prestar y devolver ejemplares y gestionar inscripciones, todo desde el navegador.
+La interfaz web permite explorar el catálogo, abrir fichas individuales, gestionar préstamos, lectores y eventos de ejemplo, utilizar filtros y favoritos y ajustar el tamaño del texto. Los cambios se guardan en el navegador.
 
-> **Importante:** es una **demostración independiente** desarrollada con HTML, CSS y JavaScript, no un frontend conectado a la API Spring Boot. Los datos iniciales son ficticios y los cambios se guardan en `localStorage` del navegador. No se envía información al servidor ni existe autenticación.
+> **Importante:** es una **demostración independiente** desarrollada con HTML, CSS y JavaScript, no un frontend conectado a la API Spring Boot. Los datos iniciales son ficticios y los cambios se guardan en `localStorage` del navegador. No se envía la información de la biblioteca al servidor Java ni existe inicio de sesión en la demo. Las portadas externas se consultan mediante Open Library.
 
 ### Publicación
 
@@ -117,7 +117,7 @@ Content-Type: application/json
 }
 ```
 
-**Ejemplo: solicitar un préstamo** (sustituye los identificadores y elige una fecha futura):
+**Ejemplo: solicitar un préstamo** (sustituye los identificadores y utiliza una fecha futura respecto al momento en que lo pruebes):
 
 ```http
 POST /prestamo/1
@@ -125,7 +125,7 @@ Content-Type: application/json
 
 {
   "usuario": { "id": 1 },
-  "fechaFin": "2027-02-28"
+  "fechaFin": "2027-06-30"
 }
 ```
 
@@ -166,7 +166,7 @@ cd Codigo
 ./mvnw test
 ```
 
-En GitHub Actions se ejecutan las pruebas unitarias sin necesitar una instancia de PostgreSQL. La prueba de contexto original requiere una base de datos configurada si se ejecuta sin perfil de pruebas.
+En GitHub Actions el workflow **Java checks** ejecuta los tests con un servicio PostgreSQL 16 para la prueba de contexto y las pruebas de negocio. En local necesitas tener la base de datos disponible para ejecutar la suite completa.
 
 ## Organización
 
@@ -178,7 +178,7 @@ Codigo/
     repository/   # consultas JPA
     entity/       # modelo de datos
   src/test/       # pruebas
-Documentacion/    # requisitos y diagrama UML originales
+Documentacion/    # guía técnica, requisitos y UML originales
 docker-compose.yml
 ```
 
@@ -193,5 +193,5 @@ docker-compose.yml
 
 La versión original fue un proyecto de repaso de API RESTful para **PSP — DAM, curso 2025/26**. Esta ampliación conserva los dominios y las capas existentes, corrige las reglas de disponibilidad e inscripciones y añade herramientas de documentación y pruebas.
 
-**Repositorio:** [API-MrBibliomante](https://github.com/juanjogamero/API-MrBibliomante)
+**Repositorio:** [MrBibliomante — Sistema de Gestión Bibliotecaria](https://github.com/juanjogamero/MrBibliomante-Sistema-de-Gestion-Bibliotecaria)
 
