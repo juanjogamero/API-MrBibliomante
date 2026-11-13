@@ -1,53 +1,51 @@
 <div align="center">
 
-[![MrBibliomante — THE BOOKS: descubrir libros](docs/readme-cover.svg)](https://juanjogamero.github.io/MrBibliomante-Sistema-de-Gestion-Bibliotecaria/)
+<a href="https://juanjogamero.github.io/MrBibliomante-Sistema-de-Gestion-Bibliotecaria/">
+  <img src="docs/readme-cover.svg" alt="MrBibliomante: biblioteca digital con catálogo de libros y panel de gestión" width="100%">
+</a>
 
-<br>
+# MrBibliomante
 
-[![Abrir biblioteca interactiva](https://img.shields.io/badge/EXPLORAR_LA_BIBLIOTECA-FF795E?style=for-the-badge&logo=githubpages&logoColor=white)](https://juanjogamero.github.io/MrBibliomante-Sistema-de-Gestion-Bibliotecaria/)
+**Sistema de Gestión Bibliotecaria**
 
-### Descubre tu próxima lectura.
+Una biblioteca digital para descubrir libros, gestionar préstamos, organizar eventos y explorar una API REST desarrollada con Java y Spring Boot.
 
-**[Abrir MrBibliomante →](https://juanjogamero.github.io/MrBibliomante-Sistema-de-Gestion-Bibliotecaria/)**
+### [Explorar la plataforma web](https://juanjogamero.github.io/MrBibliomante-Sistema-de-Gestion-Bibliotecaria/ )
 
-Una biblioteca digital para explorar libros reales, descubrir categorías y gestionar tus lecturas.
-
-> **Acceso actualizado tras el cambio de nombre del repositorio:** [Abrir la aplicación](https://juanjogamero.github.io/MrBibliomante-Sistema-de-Gestion-Bibliotecaria/).
-
-**Pensado para leer cómodamente:** tipografía Inter de mayor tamaño, contraste mejorado y botón **Aa** para adaptar el tamaño del texto (100 %, 110 % o 120 %).
+[Ver la demostración interactiva](https://juanjogamero.github.io/MrBibliomante-Sistema-de-Gestion-Bibliotecaria/) · [Documentación técnica](Documentacion/GUIA_TECNICA.md) · [Código de la API](Codigo/src/main/java/com/mrbibliomante)
 
 </div>
 
 ---
 
-### Una biblioteca que puedes explorar
+## Descubre el proyecto
 
-Fichas editoriales de libros con portada destacada, sinopsis, disponibilidad, ficha bibliográfica e historial de préstamos. Una interfaz **a pantalla completa**, inspirada en referencias de diseño reales.
+MrBibliomante nació como un proyecto académico de **Desarrollo de Aplicaciones Multiplataforma (DAM)** y se amplió para mostrar una experiencia visual de biblioteca y las reglas de negocio de su API.
 
-
-
-| Descubrir libros | Mi biblioteca |
+| Explora desde el navegador | Gestiona desde la API |
 | :--- | :--- |
-| Portadas de libros reales, recomendaciones, categorías y búsqueda. | Préstamos, devoluciones, fechas, estados e historial. |
+| Catálogo, búsqueda, categorías y favoritos | Libros, ejemplares y disponibilidad |
+| Fichas individuales con información de cada libro | Préstamos, devoluciones y vencimientos |
+| Lectores, eventos e inscripciones | Usuarios y control del aforo en eventos |
+| Diseño adaptable y ajuste de tamaño de letra | Validaciones, PostgreSQL y documentación OpenAPI |
 
-| Eventos literarios | Lectores y favoritos |
-| :--- | :--- |
-| Encuentros, plazas e inscripciones para la comunidad. | Perfiles de lectores, fichas y tus libros guardados. |
+**La interfaz y la API son dos partes independientes.** La [plataforma web](https://juanjogamero.github.io/MrBibliomante-Sistema-de-Gestion-Bibliotecaria/) funciona con HTML, CSS y JavaScript y guarda los cambios **solo en tu navegador**. No requiere registro ni se conecta al servidor Java. Incluye datos ficticios para probar las funciones; puedes restablecerlos cuando quieras.
 
-> La web es una **demo interactiva**. Los cambios se guardan solo en tu navegador y puedes restablecerlos. La demo está separada de la API Java original.
+## Tecnologías
 
-### Sobre el proyecto
+<p>
+<img src="https://img.shields.io/badge/Java-21-ED8B00?logo=openjdk&logoColor=white" alt="Java 21">
+<img src="https://img.shields.io/badge/Spring_Boot-3.5.5-6DB33F?logo=springboot&logoColor=white" alt="Spring Boot 3.5.5">
+<img src="https://img.shields.io/badge/PostgreSQL-4169E1?logo=postgresql&logoColor=white" alt="PostgreSQL">
+<img src="https://img.shields.io/badge/JavaScript-323330?logo=javascript&logoColor=F7DF1E" alt="JavaScript">
+<img src="https://img.shields.io/badge/GitHub_Pages-222222?logo=githubpages&logoColor=white" alt="GitHub Pages">
+</p>
 
-Proyecto académico de **Desarrollo de Aplicaciones Multiplataforma (DAM)**, convertido en una experiencia de portfolio. La API original gestiona libros, préstamos, usuarios y eventos utilizando Java, Spring Boot y PostgreSQL.
+**Backend:** Java 21, Spring Boot, Spring Data JPA, PostgreSQL, Jakarta Validation y Swagger/OpenAPI.
 
-![Java](https://img.shields.io/badge/Java_21-333333?style=flat-square&logo=openjdk&logoColor=white)
-![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.5-6DB33F?style=flat-square&logo=springboot&logoColor=white)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=flat-square&logo=postgresql&logoColor=white)
+**Web interactiva:** HTML, CSS y JavaScript, publicada con GitHub Pages y con almacenamiento local.
 
-[Explorar el backend](Codigo/src/main/java/com/mrbibliomante) · [Documentación técnica](Documentacion/GUIA_TECNICA.md) · [Requisitos y UML](Documentacion)
-
-<details>
-<summary><strong>Cómo ejecutar la API real en local</strong></summary>
+## Ejecutar la API en local
 
 Necesitas Java 21 y Docker. Desde la raíz del repositorio:
 
@@ -57,16 +55,38 @@ cd Codigo
 ./mvnw spring-boot:run
 ```
 
-En Windows, ejecuta `mvnw.cmd spring-boot:run`.
+En Windows, desde `Codigo`, utiliza `mvnw.cmd spring-boot:run`.
 
-Abre [Swagger UI](http://localhost:8080/swagger-ui.html) para probar la API.
+La documentación interactiva del backend estará en **http://localhost:8080/swagger-ui.html**. Las credenciales de PostgreSQL incluidas en la configuración son únicamente para desarrollo local.
 
-</details>
+Para ejecutar las pruebas, entra en `Codigo` y utiliza `./mvnw test` (en Windows, `mvnw.cmd test`).
+
+## Estructura del repositorio
+
+```text
+Codigo/          API REST, entidades, servicios, repositorios y pruebas
+docs/            Interfaz web interactiva publicada con GitHub Pages
+Documentacion/   Guía técnica, requisitos originales y diagramas UML
+scripts/         Pruebas de funcionamiento de la interfaz
+.github/         Automatización de pruebas y publicación
+```
+
+La guía técnica incluye los endpoints y ejemplos para probar la API: **[ver documentación completa](Documentacion/GUIA_TECNICA.md)**.
+
+## Origen y alcance
+
+Proyecto académico de **PSP · DAM, curso 2025/26**, evolucionado para portfolio manteniendo la arquitectura y funcionalidad original de la API.
+
+La interfaz es una demostración con datos de ejemplo; **no debe confundirse con un frontend conectado a Spring Boot**. El backend no incorpora autenticación ni autorización y está pensado para ejecutarse en un entorno de aprendizaje, no para publicarlo sin protección.
+
+Las cubiertas de la biblioteca pueden proceder de [Open Library](https://openlibrary.org/) o ser ilustraciones editoriales alternativas elaboradas para la demostración. Algunas imágenes externas pueden no estar disponibles.
 
 ---
 
 <div align="center">
-<sub>MrBibliomante · Proyecto académico DAM · Diseño de demostración inspirado en una referencia facilitada para este proyecto</sub>
 
-<sub>Las portadas se consultan por ISBN en <a href="https://openlibrary.org/">Open Library</a>. Los datos de lectores y préstamos son ficticios.</sub>
+**[Abrir MrBibliomante](https://juanjogamero.github.io/MrBibliomante-Sistema-de-Gestion-Bibliotecaria/)**
+
+<sub>MrBibliomante · Sistema de Gestión Bibliotecaria · Java / Spring Boot / PostgreSQL</sub>
+
 </div>

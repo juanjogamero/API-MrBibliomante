@@ -99,3 +99,12 @@ assert.ok(!page.includes('github.com/juanjogamero/API-MrBibliomante'));
 const publicReadme = readFileSync(new URL('../README.md', import.meta.url), 'utf8');
 assert.ok(publicReadme.includes(canonicalPage));
 assert.ok(!publicReadme.includes('juanjogamero.github.io/API-MrBibliomante/'));
+
+// Verificación de contenido público después del renombrado del repositorio.
+const technicalGuide = readFileSync(new URL('../Documentacion/GUIA_TECNICA.md', import.meta.url), 'utf8');
+assert.ok(technicalGuide.includes(canonicalPage));
+assert.ok(technicalGuide.includes(canonicalRepo));
+assert.ok(!technicalGuide.includes('juanjogamero.github.io/API-MrBibliomante/'));
+assert.ok(page.includes('rel="canonical"'));
+assert.ok(page.includes('MrBibliomante | Sistema de Gestión Bibliotecaria'));
+assert.ok(publicReadme.includes('La interfaz y la API son dos partes independientes'));
