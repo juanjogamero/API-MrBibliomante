@@ -1,76 +1,94 @@
 package com.mrbibliomante.service;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 import com.mrbibliomante.entity.Evento;
+import com.mrbibliomante.entity.Usuario;
 import com.mrbibliomante.repository.EventoRepository;
+import com.mrbibliomante.repository.UsuarioRepository;
 
 @Service
 public class EventoService {
-	@Autowired
-	private EventoRepository eventoRepository;
+    private final EventoRepository eventoRepository;
+    private final UsuarioRepository usuarioRepository;
 
-//	@Autowired
-//	private UsuarioService usuarioService;
+    public EventoService(EventoRepository eventoRepository, UsuarioRepository usuarioRepository) {
+        this.eventoRepository = eventoRepository;
+        this.usuarioRepository = usuarioRepository;
+    }
 
-	public Optional<Evento> findById(int id) {
-		return this.eventoRepository.findById(id);
-	}
+    public Optional<Evento> findById(int id) { return eventoRepository.findById(id); }
+    public List<Evento> findAll() { return eventoRepository.findAll(); }
+    public Evento save(Evento evento) {
+        evento.setId(0);
+        evento.setVersion(0);
+        return eventoRepository.save(evento);
+    }
 
-	public List<Evento> findAll() {
-		return this.eventoRepository.findAll();
-	}
+    @Transactional
+    public Evento update(int id, Evento nuevosDatos) {
+        Evento evento = eventoRepository.findByIdForUpdate(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Evento no encontrado"));
+        if (numUsuariosByEvento(id) > 0) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "No se puede editar un evento con inscritos");
+        }
+        evento.setTitulo(nuevosDatos.getTitulo());
+        evento.setDescripcion(nuevosDatos.getDescripcion());
+        evento.setAforo(nuevosDatos.getAforo());
+        evento.setFechaHora(nuevosDatos.getFechaHora());
+        return eventoRepository.save(evento);
+    }
 
-	public Evento save(Evento evento) {
-		return this.eventoRepository.save(evento);
-	}
+    @Transactional
+    public void subscribeEvento(int idEvento, int idUsuario) {
+        Evento evento = eventoRepository.findByIdForUpdate(idEvento)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Evento no encontrado"));
+        Usuario usuario = usuarioRepository.findById(idUsuario)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado"));
+        if (evento.getFechaHora() == null || !evento.getFechaHora().isAfter(LocalDate.now())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "El evento ya no admite inscripciones");
+        }
+        if (usuario.getListEvent() == null) usuario.setListEvent(new ArrayList<>());
+        if (usuario.getListEvent().stream().anyMatch(e -> e.getId() == idEvento)) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "El usuario ya esta inscrito");
+        }
+        if (numUsuariosByEvento(idEvento) >= evento.getAforo()) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Aforo completo");
+        }
+        usuario.getListEvent().add(evento);
+        usuarioRepository.save(usuario);
+    }
 
-	public Evento update(int idEvento, Evento evento) {
-		Optional<Evento> oEvento = findById(idEvento);
-		if (oEvento.isPresent() && numUsuariosByEvento(idEvento) == 0 ) {
-			Evento e = oEvento.get();
-			e.setTitulo(evento.getTitulo());
-			e.setDescripcion(evento.getDescripcion());
-			e.setAforo(evento.getAforo());
-			e.setFechaHora(evento.getFechaHora());
-			return save(e);
-		}
-		return null;
-	}
+    @Transactional
+    public void unSubscribeEvento(int idEvento, int idUsuario) {
+        eventoRepository.findByIdForUpdate(idEvento)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Evento no encontrado"));
+        Usuario usuario = usuarioRepository.findById(idUsuario)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado"));
+        if (usuario.getListEvent() == null ||
+            !usuario.getListEvent().removeIf(e -> e.getId() == idEvento)) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "El usuario no esta inscrito");
+        }
+        usuarioRepository.save(usuario);
+    }
 
-	// TODO: Se necesita obtener usuario logueado
-	public boolean subscribeEvento(int idEvento) {
-		Optional<Evento> oEvento = findById(idEvento);
-		if (oEvento.isPresent()) {
-			Evento e = oEvento.get();
-			if (e.getAforo() >= numUsuariosByEvento(idEvento)) {
-				return true;
-			}
-		}
-		return false;
-	}
+    @Transactional
+    public void delete(int id) {
+        Evento evento = eventoRepository.findByIdForUpdate(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Evento no encontrado"));
+        if (numUsuariosByEvento(id) > 0) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "No se puede borrar un evento con inscritos");
+        }
+        eventoRepository.delete(evento);
+    }
 
-	// TODO: Se necesita obtener usuario logueado
-	public boolean unSubscribeEvento(int idEvento) {
-		Optional<Evento> oEvento = findById(idEvento);
-		if (oEvento.isPresent()) {
-			Evento e = oEvento.get();
-			if (e.getAforo() >= numUsuariosByEvento(idEvento)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	public void delete(int id) {
-		this.eventoRepository.deleteById(id);
-	}
-	
-	public int numUsuariosByEvento(int idEvento) {
-		return eventoRepository.numUsuariosByEvento(idEvento);
-	}
+    public int numUsuariosByEvento(int idEvento) {
+        return eventoRepository.numUsuariosByEvento(idEvento);
+    }
 }
