@@ -18,6 +18,10 @@ Una biblioteca digital para explorar libros reales, descubrir categorías y gest
 
 ### Una biblioteca que puedes explorar
 
+Fichas editoriales de libros con portada destacada, sinopsis, disponibilidad, ficha bibliográfica e historial de préstamos. Una interfaz **a pantalla completa**, inspirada en referencias de diseño reales.
+
+
+
 | Descubrir libros | Mi biblioteca |
 | :--- | :--- |
 | Portadas de libros reales, recomendaciones, categorías y búsqueda. | Préstamos, devoluciones, fechas, estados e historial. |

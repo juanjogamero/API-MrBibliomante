@@ -122,8 +122,8 @@
   // ISBN solo se usa para otros ejemplares. Ninguna foto de biblioteca se usa
   // como sustituto de la portada de un libro.
   const coverOverrides = {
-    "La sombra del viento": "https://covers.openlibrary.org/b/id/7430386-L.jpg?default=false",
-    "El nombre del viento": "https://covers.openlibrary.org/b/olid/OL38586224M-L.jpg?default=false"
+    "La sombra del viento": "covers/sombra-del-viento.svg",
+    "El nombre del viento": "covers/nombre-del-viento.svg"
   };
   const coverFallback = b => {
     if (b?.title === "La sombra del viento") return "covers/sombra-del-viento.svg";
