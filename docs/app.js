@@ -352,10 +352,6 @@
            selectField("userId","Inscribir nuevo lector",options.map(u=>opt(u.id,u.name)).join("")),"Inscribir lector") :
            '<p class="modal-desc">Todos los lectores registrados están inscritos.</p>') + '</div>')); return;
     }
-    if (action === "unregister") {
-      const e = event(id), uid = Number(window.__unused || 0); // User ID supplied through the click handler below.
-      if (!e || !uid) return;
-    }
   }
 
   // Action dispatcher reads both IDs without exposing user content as executable HTML.

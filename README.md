@@ -9,6 +9,19 @@ API REST para administrar el catálogo de una biblioteca, préstamos y devolucio
 
 > **Alcance:** backend académico. No incorpora autenticación ni autorización. No se debe publicar como servicio con escritura abierta en Internet.
 
+
+## Demo interactiva — GitHub Pages
+
+**[Abrir la demo de MrBibliomante](https://juanjogamero.github.io/API-MrBibliomante/)**
+
+La demo incluye un panel de control, catálogo de libros, lectores, préstamos y eventos. Puedes registrar nuevos libros y usuarios, prestar y devolver ejemplares y gestionar inscripciones, todo desde el navegador.
+
+> **Importante:** es una **demostración independiente** desarrollada con HTML, CSS y JavaScript, no un frontend conectado a la API Spring Boot. Los datos iniciales son ficticios y los cambios se guardan en `localStorage` del navegador. No se envía información al servidor ni existe autenticación.
+
+### Publicación
+
+La interfaz vive en `docs/`. Para publicarla, entra en **Settings → Pages** y en **Build and deployment → Source** selecciona **GitHub Actions**. El workflow `.github/workflows/pages.yml` publica el contenido de `docs/` cuando hay cambios en `main`. No necesitas comprar ningún dominio.
+
 ## Funcionalidades
 
 - Catálogo de libros: altas, consultas, modificaciones, bajas y búsqueda por título/autor.
