@@ -302,3 +302,25 @@ td{color:#6d716c;font-size:10.5px;border-bottom-color:#f0f0ed}
   .discover-search input{font-size:8px}
   .card-grid-v2{grid-template-columns:1fr}
 }
+
+
+/* Final reference geometry: cream upper panel begins directly beneath the outer frame. */
+.main-column:has(.discover-page){position:relative}
+.main-column:has(.discover-page) .topbar{position:absolute;top:0;right:0;width:100%;z-index:2;background:transparent}
+.main-column:has(.discover-page) .demo-notice{display:none}
+.main-column:has(.discover-page) .discover-page{padding-top:36px}
+.main-column:has(.discover-page) .discover-page:before{height:310px}
+.main-column:has(.discover-page) .recommend-section{margin-top:0}
+.main-column:not(:has(.discover-page)) .top-search{display:flex;order:-1;width:min(270px,29vw);height:38px;background:white;border:1px solid #e8e8e4;border-radius:8px}
+.main-column:not(:has(.discover-page)) .top-search input{font-size:10px}
+.main-column:not(:has(.discover-page)) .topbar{background:#f1efdf}
+@media(max-width:860px){
+  .main-column:has(.discover-page) .discover-page{padding-top:31px}
+  .main-column:has(.discover-page) .discover-page:before{height:285px}
+}
+@media(max-width:620px){
+  .main-column:has(.discover-page) .discover-page{padding-top:25px}
+  .main-column:has(.discover-page) .discover-page:before{height:252px}
+  .main-column:not(:has(.discover-page)) .top-search{display:flex;width:150px;max-width:45vw}
+  .main-column:not(:has(.discover-page)) .top-search input{font-size:9px}
+}
