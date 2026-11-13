@@ -1,16 +1,18 @@
 <div align="center">
 
-[![MrBibliomante — THE BOOKS: descubrir libros](docs/readme-cover.svg)](https://juanjogamero.github.io/API-MrBibliomante/)
+[![MrBibliomante — THE BOOKS: descubrir libros](docs/readme-cover.svg)](https://juanjogamero.github.io/MrBibliomante-Sistema-de-Gestion-Bibliotecaria/)
 
 <br>
 
-[![Abrir biblioteca interactiva](https://img.shields.io/badge/EXPLORAR_LA_BIBLIOTECA-FF795E?style=for-the-badge&logo=githubpages&logoColor=white)](https://juanjogamero.github.io/API-MrBibliomante/)
+[![Abrir biblioteca interactiva](https://img.shields.io/badge/EXPLORAR_LA_BIBLIOTECA-FF795E?style=for-the-badge&logo=githubpages&logoColor=white)](https://juanjogamero.github.io/MrBibliomante-Sistema-de-Gestion-Bibliotecaria/)
 
 ### Descubre tu próxima lectura.
 
-**[Abrir MrBibliomante →](https://juanjogamero.github.io/API-MrBibliomante/)**
+**[Abrir MrBibliomante →](https://juanjogamero.github.io/MrBibliomante-Sistema-de-Gestion-Bibliotecaria/)**
 
 Una biblioteca digital para explorar libros reales, descubrir categorías y gestionar tus lecturas.
+
+> **Acceso actualizado tras el cambio de nombre del repositorio:** [Abrir la aplicación](https://juanjogamero.github.io/MrBibliomante-Sistema-de-Gestion-Bibliotecaria/).
 
 **Pensado para leer cómodamente:** tipografía Inter de mayor tamaño, contraste mejorado y botón **Aa** para adaptar el tamaño del texto (100 %, 110 % o 120 %).
 

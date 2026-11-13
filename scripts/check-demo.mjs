@@ -90,3 +90,12 @@ const fontButton = {dataset:{action:"type-scale"},disabled:false};
 assert.equal(storage.get("mrbibliomante-text-scale"), "1");
 assert.match(el("#type-scale-control").innerHTML, /110%/);
 console.log("✓ Discover, fichas, favoritos y control de tamaño de letra: OK");
+
+// Los enlaces públicos deben coincidir con el nombre actual del repositorio.
+const canonicalRepo = 'https://github.com/juanjogamero/MrBibliomante-Sistema-de-Gestion-Bibliotecaria';
+const canonicalPage = 'https://juanjogamero.github.io/MrBibliomante-Sistema-de-Gestion-Bibliotecaria/';
+assert.ok(page.includes(canonicalRepo));
+assert.ok(!page.includes('github.com/juanjogamero/API-MrBibliomante'));
+const publicReadme = readFileSync(new URL('../README.md', import.meta.url), 'utf8');
+assert.ok(publicReadme.includes(canonicalPage));
+assert.ok(!publicReadme.includes('juanjogamero.github.io/API-MrBibliomante/'));
