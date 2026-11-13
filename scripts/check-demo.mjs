@@ -48,6 +48,10 @@ route("#libros",/Explora nuestra biblioteca/);
 route("#libros/1",/La sombra del viento/);
 assert.match(view(),/Historial de préstamos/);
 assert.match(view(),/Registrar préstamo/);
+assert.match(view(),/reading-showcase/);
+assert.match(view(),/Ficha bibliográfica/);
+assert.match(view(),/covers\/sombra-del-viento\.svg/);
+assert.match(view(),/Descripción/);
 route("#prestamos",/Control de préstamos/);
 route("#prestamos/1",/Seguimiento del préstamo/);
 assert.match(view(),/Lucía Martínez/);
@@ -61,7 +65,8 @@ const button = {dataset:{action:"favorite",id:"1"},disabled:false};
 (listeners.click || []).forEach(fn => fn({
   target: {closest:sel=>sel==="[data-action]"?button:null}
 }));
-assert.match(view(),/Guardado/);
+assert.match(view(),/aria-pressed="true"/);
+assert.match(view(),/aria-label="Quitar de favoritos"/);
 assert.equal(JSON.parse(storage.get("mrbibliomante-demo-v1")).favorites[0],1);
 route("#libros",/Explora nuestra biblioteca/);
 const filterBtn={dataset:{filter:"favoritos"}};

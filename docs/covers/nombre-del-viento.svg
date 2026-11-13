@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 560" width="380" height="560" role="img" aria-label="Cubierta editorial alternativa de El nombre del viento">
+<defs>
+ <linearGradient id="forest" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#294033"/><stop offset=".55" stop-color="#546148"/><stop offset="1" stop-color="#172c2f"/></linearGradient>
+ <linearGradient id="light" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#e9c487" stop-opacity=".78"/><stop offset="1" stop-color="#f8df9f" stop-opacity="0"/></linearGradient>
+</defs>
+<rect width="380" height="560" fill="url(#forest)"/>
+<rect width="16" height="560" fill="#101f1d" opacity=".8"/>
+<g fill="none" stroke="#c9d0bd" stroke-opacity=".17" stroke-width="3">
+ <path d="M33 532q73-172 134-216t172-269M26 453q93-184 267-303M69 554q56-145 148-200t103-126"/>
+ <path d="M55 124q110 95 262 24M45 204q99 96 252 28"/>
+</g>
+<circle cx="188" cy="324" r="117" fill="url(#light)" opacity=".28"/>
+<path d="M155 458q6-90 37-132 38 53 41 132" fill="#122323" opacity=".8"/>
+<path d="M165 364q-18-22-40-33M220 367q18-26 40-36" stroke="#a9b391" stroke-width="5" opacity=".55"/>
+<rect x="35" y="32" width="310" height="496" fill="none" stroke="#e8dcc1" stroke-opacity=".52"/>
+<text x="190" y="89" text-anchor="middle" fill="#e8dcc1" font-family="Georgia,serif" letter-spacing="2.5" font-size="18">PATRICK ROTHFUSS</text>
+<text x="190" y="217" text-anchor="middle" fill="#f9f0d7" font-family="Georgia,serif" font-size="44">El nombre</text>
+<text x="190" y="263" text-anchor="middle" fill="#f9f0d7" font-family="Georgia,serif" font-size="43">del viento</text>
+<path d="M131 284h118" stroke="#f2ddac" stroke-width="1.5"/>
+<text x="190" y="497" text-anchor="middle" fill="#f0e0c3" font-family="Arial,sans-serif" font-size="11" letter-spacing="2.3">MRBIBLIOMANTE · EDICIÓN VISUAL</text>
+</svg>
