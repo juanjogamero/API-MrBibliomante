@@ -3,23 +3,25 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#142126">
-  <meta name="description" content="Explora libros reales en una biblioteca digital. Prueba préstamos, lectores y eventos en la demo interactiva MrBibliomante.">
-  <title>MrBibliomante — Tu biblioteca digital</title>
+  <meta name="theme-color" content="#f2f1eb">
+  <meta name="description" content="MrBibliomante: descubre libros reales, gestiona tus préstamos, lectores y eventos culturales en una biblioteca digital interactiva.">
+  <title>MrBibliomante · Descubre tu próxima lectura</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@1,9..144,400;1,9..144,500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://covers.openlibrary.org">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="premium.css">
+  <link rel="stylesheet" href="the-books.css">
   <script src="app.js" defer></script>
 </head>
 <body>
   <svg aria-hidden="true" class="icon-library" xmlns="http://www.w3.org/2000/svg">
-    <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/></symbol>
+    <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20M6.5 2H20v20H6.5A2.5 2.5 0 0 1 6.5 2Z"/></symbol>
     <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></symbol>
     <symbol id="i-return" viewBox="0 0 24 24"><path d="m9 14-5-5 5-5M4 9h11a5 5 0 0 1 0 10h-2"/></symbol>
-    <symbol id="i-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM22 21v-2a4 4 4 0 0 0 0-8 4 4 0 0 0 0 8Z"/></symbol>
     <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></symbol>
     <symbol id="i-spark" viewBox="0 0 24 24"><path d="m12 3 1.9 6.1L20 11l-6.1 1.9L12 19l-1.9-6.1L4 11l6.1-1.9L12 3ZM19 18l.7 1.3L21 20l-1.3.7L19 22l-.7-1.3L17 20l1.3-.7L19 18Z"/></symbol>
     <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></symbol>
@@ -32,78 +34,71 @@
     <symbol id="i-filter" viewBox="0 0 24 24"><path d="M4 7h16M7 12h10M10 17h4"/></symbol>
     <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
     <symbol id="i-close" viewBox="0 0 24 24"><path d="M5 5l14 14M19 5 5 19"/></symbol>
+    <symbol id="i-heart" viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9ZM10 21h4"/></symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="m19.4 15 .2 2-2.3 2.3-2-.2-1 1.5h-3l-1-1.5-2 .2L6 17l.2-2L4.7 14v-4l1.5-1L6 7l2.3-2.3 2 .2 1-1.5h3l1 1.5 2-.2L19.6 7l-.2 2 1.5 1v4Z"/></symbol>
+    <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m7 10 5 5 5-5"/></symbol>
   </svg>
 
   <div class="app-shell">
-    <aside class="sidebar" aria-label="Navegación principal">
-      <a href="#inicio" class="brand" aria-label="MrBibliomante: inicio">
-        <span class="brand-icon"><svg class="icon"><use href="#i-book"/></svg><i></i></span>
-        <span class="brand-name">mr<span>biblio</span>mante<small>Biblioteca digital</small></span>
+    <aside class="sidebar" aria-label="Navegación">
+      <a class="brand" href="#inicio" aria-label="The Books · MrBibliomante, inicio">
+        <span class="brand-name">THE BOOKS<small>MRBIBLIOMANTE</small></span>
       </a>
 
-      <p class="nav-caption">ESPACIO DE TRABAJO</p>
-      <nav class="sidebar-nav" aria-label="Secciones">
-        <a class="nav-link" data-view="inicio" href="#inicio"><svg class="icon"><use href="#i-grid"/></svg><span>Vista general</span></a>
-        <a class="nav-link" data-view="libros" href="#libros"><svg class="icon"><use href="#i-book"/></svg><span>Catálogo</span></a>
-        <a class="nav-link" data-view="prestamos" href="#prestamos"><svg class="icon"><use href="#i-return"/></svg><span>Préstamos</span></a>
-        <a class="nav-link" data-view="eventos" href="#eventos"><svg class="icon"><use href="#i-calendar"/></svg><span>Eventos</span></a>
-        <a class="nav-link" data-view="usuarios" href="#usuarios"><svg class="icon"><use href="#i-users"/></svg><span>Lectores</span></a>
+      <p class="nav-caption">MENÚ</p>
+      <nav class="sidebar-nav" aria-label="Secciones principales">
+        <a class="nav-link" data-view="inicio" href="#inicio"><span class="nav-symbol"><svg class="icon"><use href="#i-book"/></svg></span><span>Descubrir</span></a>
+        <a class="nav-link" data-view="libros" href="#libros"><span class="nav-symbol"><svg class="icon"><use href="#i-grid"/></svg></span><span>Categorías</span></a>
+        <a class="nav-link" data-view="prestamos" href="#prestamos"><span class="nav-symbol"><svg class="icon"><use href="#i-return"/></svg></span><span>Mi biblioteca</span></a>
+        <a class="nav-link" data-view="eventos" href="#eventos"><span class="nav-symbol"><svg class="icon"><use href="#i-calendar"/></svg></span><span>Eventos</span></a>
+        <a class="nav-link" data-view="usuarios" href="#usuarios"><span class="nav-symbol"><svg class="icon"><use href="#i-users"/></svg></span><span>Lectores</span></a>
+        <a class="nav-link favorites-link" href="#libros" data-action="favorites"><span class="nav-symbol"><svg class="icon"><use href="#i-heart"/></svg></span><span>Favoritos</span></a>
       </nav>
 
-      <p class="nav-caption secondary-caption">EL PROYECTO</p>
-      <nav class="sidebar-nav" aria-label="Información del proyecto">
-        <a class="nav-link" data-view="proyecto" href="#proyecto"><svg class="icon"><use href="#i-spark"/></svg><span>Sobre la API</span></a>
-        <a class="nav-link" href="https://github.com/juanjogamero/API-MrBibliomante" target="_blank" rel="noopener noreferrer"><svg class="icon"><use href="#i-external"/></svg><span>Código en GitHub</span></a>
-      </nav>
+      <div class="sidebar-utilities">
+        <a class="nav-link" data-view="proyecto" href="#proyecto"><span class="nav-symbol"><svg class="icon"><use href="#i-settings"/></svg></span><span>El proyecto</span></a>
+        <button class="nav-link" type="button" data-action="info"><span class="nav-symbol"><svg class="icon"><use href="#i-spark"/></svg></span><span>Ayuda</span></button>
+        <a class="nav-link" href="https://github.com/juanjogamero/API-MrBibliomante" rel="noopener noreferrer" target="_blank"><span class="nav-symbol"><svg class="icon"><use href="#i-external"/></svg></span><span>GitHub</span></a>
+      </div>
 
-      <div class="side-bottom">
-        <div class="side-message">
-          <div class="side-message-icon"><svg class="icon"><use href="#i-spark"/></svg></div>
-          <strong>Explora sin límites</strong>
-          <p>Esta demo funciona en tu navegador. Puedes probar todas las operaciones.</p>
-          <button class="side-link" type="button" data-action="info">Cómo funciona <span aria-hidden="true">↗</span></button>
+      <div class="sidebar-bottom">
+        <div class="sidebar-art" aria-hidden="true">
+          <span class="art-circle art-circle-a"></span><span class="art-circle art-circle-b"></span>
+          <span class="art-dot art-dot-a"></span><span class="art-dot art-dot-b"></span>
         </div>
-        <div class="author"><span class="avatar avatar-small">JG</span><span>Proyecto DAM<small>Juan José Gamero</small></span></div>
+        <strong>BOOK LIBRARY</strong><small>Tu rincón de lectura</small>
       </div>
     </aside>
 
     <div class="main-column">
       <header class="topbar">
-        <div class="topbar-start">
-          <div class="breadcrumbs"><span>MrBibliomante</span><span class="crumb-divider">/</span><strong id="crumb-name">Vista general</strong></div>
-        </div>
+        <div class="topbar-start"><div class="breadcrumbs"><span>Biblioteca</span><span class="crumb-divider">/</span><strong id="crumb-name">Descubrir</strong></div></div>
         <div class="topbar-actions">
           <label class="top-search" for="global-search">
             <svg class="icon"><use href="#i-search"/></svg>
-            <input id="global-search" type="search" autocomplete="off" placeholder="Buscar libros o lectores..." aria-label="Buscar libros o lectores">
-            <kbd>/</kbd>
+            <input id="global-search" type="search" autocomplete="off" placeholder="Buscar un libro..." aria-label="Buscar un libro">
           </label>
-          <button class="btn icon-button reset-top" type="button" data-action="reset" aria-label="Restablecer datos de la demostración" title="Restablecer datos"><svg class="icon"><use href="#i-reset"/></svg></button>
-          <span class="avatar top-avatar" title="Perfil de demostración">JG</span>
+          <button type="button" class="profile-button" data-action="info" aria-label="Perfil de demostración"><span class="profile-avatar">M</span><span>Biblioteca demo</span><svg class="icon"><use href="#i-chevron"/></svg></button>
+          <button type="button" class="notification-button" data-action="notifications" aria-label="Ver actividad reciente"><svg class="icon"><use href="#i-bell"/></svg><span class="notification-dot"></span></button>
         </div>
       </header>
 
-      <div class="demo-notice">
-        <span class="live-dot"></span><strong>Modo demostración</strong><span>Los cambios se guardan solo en este navegador. No utiliza el servidor real de Spring Boot.</span>
-        <button type="button" data-action="reset">Restablecer datos <svg class="icon"><use href="#i-reset"/></svg></button>
-      </div>
+      <div class="demo-notice"><span class="live-dot"></span><strong>Demo interactiva</strong><span>Los cambios se guardan solo en este navegador, no en el servidor Java.</span><button type="button" data-action="reset">Restablecer <svg class="icon"><use href="#i-reset"/></svg></button></div>
 
-      <main id="main" tabindex="-1">
-        <div id="view" aria-live="polite"></div>
-      </main>
+      <main id="main" tabindex="-1"><div id="view" aria-live="polite"></div></main>
 
       <footer class="footer">
-        <span>© <span id="year">2026</span> MrBibliomante · Proyecto académico DAM</span>
-        <span>Desarrollado con Java 21, Spring Boot y PostgreSQL <span class="footer-sep">·</span> <a href="https://github.com/juanjogamero/API-MrBibliomante" target="_blank" rel="noopener noreferrer">Ver repositorio ↗</a></span>
+        <span>© <span id="year">2026</span> THE BOOKS · MrBibliomante</span>
+        <span>Demo local · Portadas: <a href="https://openlibrary.org/" target="_blank" rel="noopener noreferrer">Open Library</a> · <a href="https://github.com/juanjogamero/API-MrBibliomante" rel="noopener noreferrer" target="_blank">Ver código ↗</a></span>
       </footer>
     </div>
   </div>
 
   <dialog id="modal" aria-labelledby="modal-title">
-    <div class="modal-header"><div><span class="eyebrow">MRBIBLIOMANTE / DEMO</span><h2 id="modal-title">Acción</h2></div><button type="button" class="btn icon-button" id="close-modal" aria-label="Cerrar"><svg class="icon"><use href="#i-close"/></svg></button></div>
+    <div class="modal-header"><div><span class="eyebrow">THE BOOKS / MRBIBLIOMANTE</span><h2 id="modal-title">Acción</h2></div><button type="button" class="btn icon-button" id="close-modal" aria-label="Cerrar"><svg class="icon"><use href="#i-close"/></svg></button></div>
     <div id="modal-body"></div>
   </dialog>
-
   <div id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
 </body>
 </html>

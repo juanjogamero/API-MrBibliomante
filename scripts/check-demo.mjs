@@ -36,8 +36,10 @@ const history = {replaceState:(_a,_b,hash)=>{currentHash=hash;}};
 runInNewContext(code,{ document,window,localStorage,history,location,Intl,Date,Math,Number,String,
   Object,Array,JSON,RegExp,Map,Set,Boolean,Symbol,isNaN,console,setTimeout,clearTimeout });
 const view = ()=>el("#view").innerHTML;
-assert.match(view(),/Historias por descubrir/);
-assert.match(view(),/images\.unsplash\.com/);
+assert.match(view(),/Book Recommendation/);
+assert.match(view(),/Book Category/);
+assert.match(view(),/discover-search-form/);
+assert.match(view(),/covers\.openlibrary\.org/);
 function route(hash,required) {
   location.hash=hash;
   assert.match(view(),required,hash);
@@ -68,4 +70,4 @@ const filterBtn={dataset:{filter:"favoritos"}};
 }}));
 assert.match(view(),/La sombra del viento/);
 assert.doesNotMatch(view(),/Cien años de soledad/);
-console.log("✓ Navegación, detalles, imágenes, favoritos y filtros: OK");
+console.log("✓ Discover, portadas ISBN, navegación, fichas, favoritos y filtros: OK");

@@ -1,97 +1,73 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1200" height="440" viewBox="0 0 1200 440" role="img" aria-label="MrBibliomante, biblioteca digital. Prueba la demo interactiva">
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="480" viewBox="0 0 1200 480" role="img" aria-label="MrBibliomante. THE BOOKS. Discover: biblioteca digital interactiva">
 <defs>
- <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#132e28"/><stop offset="1" stop-color="#285345"/></linearGradient>
- <linearGradient id="coral" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#e2a782"/><stop offset="1" stop-color="#b8775b"/></linearGradient>
- <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#fff" stop-opacity=".11"/><stop offset="1" stop-color="#fff" stop-opacity=".04"/></linearGradient>
- <filter id="shadow"><feDropShadow dx="0" dy="13" stdDeviation="20" flood-color="#060f1a" flood-opacity=".25"/></filter>
- <clipPath id="rounded"><rect width="1200" height="440" rx="25"/></clipPath>
- <clipPath id="app"><rect x="648" y="56" width="584" height="424" rx="19"/></clipPath>
+ <filter id="s" x="-30%" y="-30%" width="160%" height="180%"><feDropShadow dx="0" dy="14" stdDeviation="17" flood-color="#413c30" flood-opacity=".11"/></filter>
+ <filter id="bk" x="-30%" y="-30%" width="170%" height="180%"><feDropShadow dx="4" dy="6" stdDeviation="6" flood-color="#353328" flood-opacity=".23"/></filter>
+ <clipPath id="clip"><rect width="1200" height="480" rx="26"/></clipPath>
 </defs>
-<g clip-path="url(#rounded)">
- <rect width="1200" height="440" fill="url(#bg)"/>
- <circle cx="590" cy="437" r="290" fill="none" stroke="#fff" stroke-opacity=".055" stroke-width="52"/>
- <circle cx="1130" cy="45" r="246" fill="#ffad87" opacity=".04"/>
- <circle cx="45" cy="30" r="130" fill="#f6b79f" opacity=".025"/>
- <g font-family="Inter,Segoe UI,Arial,sans-serif">
-  <rect x="63" y="64" width="40" height="40" rx="11" fill="url(#coral)"/>
-  <g fill="none" stroke="#fff" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
-   <path d="M71 77h9c3 0 4 2 4 4v13c-1.5-2-3-2.5-6-2.5h-7V77ZM95 77h-7c-3 0-4 2-4 4v13c1.5-2 3-2.5 6-2.5h5V77Z"/>
-  </g>
-  <text x="114" y="91" fill="#fff" font-size="18" font-weight="750" letter-spacing="-.4">mr<tspan fill="#f2a283">biblio</tspan>mante</text>
-  <rect x="62" y="139" width="207" height="28" rx="14" fill="#f2a283" fill-opacity=".12" stroke="#f2a283" stroke-opacity=".22"/>
-  <circle cx="78" cy="153" r="3.5" fill="#f2a283"/>
-  <text x="92" y="157" fill="#ffc5aa" font-size="10.5" font-weight="700" letter-spacing="1.3">PROYECTO DE PORTFOLIO</text>
-  <text x="61" y="225" fill="#fff" font-size="51" font-weight="800" letter-spacing="-2">Tu biblioteca.</text>
-  <text x="61" y="284" fill="#f6a887" font-size="51" font-weight="800" letter-spacing="-2">Una nueva forma</text>
-  <text x="62" y="334" fill="#fff" font-size="51" font-weight="800" letter-spacing="-2">de explorarla.</text>
-  <text x="65" y="373" fill="#b7c4d5" font-size="14">Libros · Préstamos · Lectores · Eventos</text>
-  <rect x="64" y="395" width="176" height="36" rx="9" fill="url(#coral)"/>
-  <text x="85" y="418" fill="#192334" font-size="13" font-weight="800">EXPLORAR DEMO</text>
-  <path d="M205 413h14m-6-6 6 6-6 6" fill="none" stroke="#192334" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
- </g>
- <g clip-path="url(#app)" filter="url(#shadow)" font-family="Inter,Segoe UI,Arial,sans-serif">
-  <rect x="648" y="56" width="584" height="424" rx="19" fill="#f6f7f2"/>
-  <rect x="648" y="56" width="584" height="50" fill="#fff"/>
-  <rect x="648" y="106" width="584" height="1" fill="#e5eaf0"/>
-  <circle cx="675" cy="80" r="5" fill="#f4c9b6"/>
-  <circle cx="693" cy="80" r="5" fill="#e5eaf0"/>
-  <circle cx="711" cy="80" r="5" fill="#e5eaf0"/>
-  <rect x="752" y="70" width="238" height="20" rx="6" fill="#f0f3f7"/>
-  <text x="766" y="84" fill="#90a0b2" font-size="9">mrBibliomante / Vista general</text>
-  <circle cx="1194" cy="81" r="13" fill="#f4e7df"/>
-  <rect x="648" y="107" width="122" height="373" fill="#203c34"/>
-  <text x="668" y="140" fill="#7e90a6" font-size="8" font-weight="750" letter-spacing=".8">ESPACIO DE TRABAJO</text>
-  <rect x="659" y="159" width="102" height="34" rx="6" fill="#2a3a50"/>
-  <rect x="669" y="170" width="12" height="12" rx="3" fill="#ee9f80"/>
-  <text x="689" y="180" fill="#fff" font-size="10.5" font-weight="650">Vista general</text>
-  <g font-size="10.5" fill="#93a6ba">
-   <rect x="669" y="212" width="12" height="13" rx="2" fill="none" stroke="#93a6ba"/>
-   <text x="689" y="223">Catálogo</text>
-   <path d="M669 250h12v9h-12Z" fill="none" stroke="#93a6ba"/>
-   <text x="689" y="259">Préstamos</text>
-   <circle cx="675" cy="293" r="6" fill="none" stroke="#93a6ba"/>
-   <text x="689" y="295">Eventos</text>
-   <circle cx="674" cy="330" r="5" fill="none" stroke="#93a6ba"/>
-   <text x="689" y="332">Lectores</text>
-  </g>
-  <text x="794" y="141" fill="#c26c52" font-size="9" font-weight="800" letter-spacing="1.3">VISTA GENERAL</text>
-  <text x="794" y="175" fill="#234234" font-size="24" font-weight="800" letter-spacing="-1">Bienvenido a tu biblioteca</text>
-  <text x="794" y="193" fill="#8190a3" font-size="11">Un vistazo a los últimos movimientos.</text>
-  <g>
-   <rect x="794" y="217" width="129" height="94" rx="11" fill="#fff" stroke="#e4eaf2"/>
-   <rect x="808" y="231" width="28" height="28" rx="8" fill="#fff0e9"/>
-   <text x="816" y="250" fill="#d68261" font-size="17">▤</text>
-   <text x="808" y="288" fill="#234234" font-size="23" font-weight="800">6</text>
-   <text x="845" y="288" fill="#7c8c9f" font-size="10">Libros</text>
-   <rect x="931" y="217" width="129" height="94" rx="11" fill="#fff" stroke="#e4eaf2"/>
-   <rect x="945" y="231" width="28" height="28" rx="8" fill="#edf3ff"/>
-   <text x="953" y="249" fill="#5878ae" font-size="15">↺</text>
-   <text x="945" y="288" fill="#234234" font-size="23" font-weight="800">4</text>
-   <text x="982" y="288" fill="#7c8c9f" font-size="10">Préstamos</text>
-   <rect x="1068" y="217" width="129" height="94" rx="11" fill="#fff" stroke="#e4eaf2"/>
-   <rect x="1082" y="231" width="28" height="28" rx="8" fill="#e6f7ef"/>
-   <text x="1090" y="249" fill="#299c78" font-size="15">♧</text>
-   <text x="1082" y="288" fill="#234234" font-size="23" font-weight="800">5</text>
-   <text x="1119" y="288" fill="#7c8c9f" font-size="10">Lectores</text>
-  </g>
-  <text x="794" y="343" fill="#234234" font-size="13" font-weight="800">Descubre nuestro catálogo</text>
-  <g>
-   <rect x="794" y="356" width="126" height="135" rx="10" fill="#fff" stroke="#e5eaf1"/>
-   <rect x="801" y="363" width="112" height="82" rx="7" fill="#eee0d7"/>
-   <rect x="839" y="371" width="44" height="64" rx="3" fill="#976b69"/>
-   <text x="861" y="400" fill="#fff" font-size="25" text-anchor="middle">✧</text>
-   <text x="801" y="460" fill="#25354a" font-size="9.2" font-weight="750">La sombra del viento</text>
-   <rect x="930" y="356" width="126" height="135" rx="10" fill="#fff" stroke="#e5eaf1"/>
-   <rect x="937" y="363" width="112" height="82" rx="7" fill="#e8e9d8"/>
-   <rect x="975" y="371" width="44" height="64" rx="3" fill="#697e69"/>
-   <text x="997" y="400" fill="#fff" font-size="25" text-anchor="middle">✦</text>
-   <text x="937" y="460" fill="#25354a" font-size="9.2" font-weight="750">Cien años de soledad</text>
-   <rect x="1066" y="356" width="126" height="135" rx="10" fill="#fff" stroke="#e5eaf1"/>
-   <rect x="1073" y="363" width="112" height="82" rx="7" fill="#e6e2ef"/>
-   <rect x="1111" y="371" width="44" height="64" rx="3" fill="#665b88"/>
-   <text x="1133" y="400" fill="#fff" font-size="25" text-anchor="middle">◇</text>
-   <text x="1073" y="460" fill="#25354a" font-size="9.2" font-weight="750">El nombre del viento</text>
-  </g>
- </g>
+<g clip-path="url(#clip)">
+<rect width="1200" height="480" fill="#f1f0eb"/>
+<rect x="41" y="29" width="1118" height="429" rx="24" fill="#fff" filter="url(#s)"/>
+<rect x="261" y="29" width="898" height="217" fill="#eae7d8"/>
+<path d="M261 29H1136Q1159 29 1159 53V246H308Q261 246 261 200Z" fill="#eae7d8"/>
+<rect x="41" y="29" width="220" height="429" rx="24" fill="#fff"/>
+<rect x="244" y="29" width="17" height="429" fill="#fff"/>
+<g font-family="Arial,Helvetica,sans-serif">
+<text x="77" y="73" fill="#1c201e" font-size="17" font-weight="800" letter-spacing="1.5">THE BOOKS</text>
+<text x="77" y="91" fill="#aaa8a4" font-size="9" letter-spacing="2">MRBIBLIOMANTE</text>
+<text x="77" y="137" fill="#b4b2ae" font-size="9" letter-spacing="1.5">MENÚ</text>
+<rect x="74" y="153" width="26" height="26" rx="8" fill="#fd7b60"/>
+<path d="M81 166l6-6 6 6v7h-5v-5h-3v5h-4Z" fill="#fff"/>
+<text x="111" y="171" font-size="11" font-weight="700" fill="#252823">Descubrir</text>
+<g fill="#b4b5b3" font-size="11">
+ <rect x="74" y="196" width="26" height="26" rx="8" fill="#f4f4f4"/><text x="83" y="213" fill="#92928e">▦</text><text x="111" y="213">Categorías</text>
+ <rect x="74" y="239" width="26" height="26" rx="8" fill="#f4f4f4"/><text x="83" y="256" fill="#92928e">▤</text><text x="111" y="256">Mi biblioteca</text>
+ <rect x="74" y="282" width="26" height="26" rx="8" fill="#f4f4f4"/><text x="83" y="299" fill="#92928e">♡</text><text x="111" y="299">Favoritos</text>
 </g>
-</svg>
+<path d="M74 331h141" stroke="#ececea"/>
+<rect x="76" y="352" width="62" height="64" rx="11" fill="#dd9ce7"/>
+<circle cx="92" cy="370" r="7" fill="#202020" stroke="#fff" stroke-width="3"/><circle cx="120" cy="400" r="9" fill="#202020" stroke="#fff" stroke-width="3"/>
+<path d="M83 345q44 21 0 74M145 352q-29 22-6 63" stroke="#241e2a" fill="none"/>
+<text x="147" y="383" fill="#686966" font-size="11" font-weight="700">BOOK</text>
+<text x="147" y="397" fill="#686966" font-size="11" font-weight="700">LIBRARY</text>
+<text x="315" y="109" fill="#1b1c19" font-weight="750" font-size="36" letter-spacing="-1">Discover</text>
+<rect x="315" y="135" width="454" height="48" rx="9" fill="#fff"/>
+<text x="331" y="164" font-size="12" fill="#92938c">Todas las categorías</text>
+<path d="M480 148v23" stroke="#ecece9"/>
+<circle cx="510" cy="159" r="5" stroke="#7b8079" fill="none" stroke-width="1.5"/>
+<path d="m513 163 5 5" stroke="#7b8079"/>
+<text x="532" y="164" font-size="12" fill="#b3b5ad">Encuentra tu próximo libro...</text>
+<rect x="669" y="142" width="91" height="34" rx="7" fill="#103f39"/>
+<text x="715" y="164" font-size="12" text-anchor="middle" fill="#fff">Buscar</text>
+<text x="315" y="224" fill="#34352f" font-size="18" font-weight="500">Book Recommendation</text>
+<rect x="1013" y="199" width="97" height="31" rx="7" fill="#fff"/>
+<text x="1061" y="219" font-size="11" text-anchor="middle" fill="#646561">Ver todos ›</text>
+<g filter="url(#bk)">
+ <rect x="315" y="241" width="156" height="161" rx="2" fill="#d8e6df"/>
+ <rect x="322" y="247" width="143" height="149" rx="1" fill="#f9f5e9"/>
+ <path d="M336 247v149" stroke="#d6c9b7" stroke-width="3"/>
+ <text x="393" y="277" fill="#4b5e50" text-anchor="middle" font-size="11">CARLOS RUIZ ZAFÓN</text>
+ <text x="395" y="318" fill="#344e43" text-anchor="middle" font-size="22" font-family="Georgia,serif">La sombra</text>
+ <text x="395" y="341" fill="#344e43" text-anchor="middle" font-size="22" font-family="Georgia,serif">del viento</text>
+ <path d="M353 364h83" stroke="#90ab99" stroke-width="2"/>
+ <rect x="486" y="241" width="156" height="161" rx="2" fill="#b9c9b8"/>
+ <rect x="492" y="247" width="145" height="149" fill="#e9e6cf"/>
+ <path d="M499 247v149" stroke="#b1b093" stroke-width="3"/>
+ <text x="566" y="290" fill="#4e6651" text-anchor="middle" font-size="16" font-family="Georgia,serif">Cien años</text>
+ <text x="566" y="311" fill="#4e6651" text-anchor="middle" font-size="16" font-family="Georgia,serif">de soledad</text>
+ <text x="566" y="338" fill="#788878" text-anchor="middle" font-size="11">G. G. MÁRQUEZ</text>
+ <rect x="657" y="241" width="156" height="161" rx="2" fill="#28385e"/>
+ <rect x="664" y="247" width="143" height="149" fill="#364d74"/>
+ <path d="M670 247v149" stroke="#263756" stroke-width="3"/>
+ <text x="736" y="285" fill="#f0dfb5" text-anchor="middle" font-size="11">PATRICK ROTHFUSS</text>
+ <text x="736" y="317" fill="#fff4d0" text-anchor="middle" font-size="21" font-family="Georgia,serif">El nombre</text>
+ <text x="736" y="338" fill="#fff4d0" text-anchor="middle" font-size="21" font-family="Georgia,serif">del viento</text>
+ <rect x="828" y="241" width="156" height="161" rx="2" fill="#ce5e43"/>
+ <rect x="835" y="247" width="143" height="149" fill="#d97c54"/>
+ <path d="M841 247v149" stroke="#a4533d" stroke-width="3"/>
+ <text x="907" y="325" text-anchor="middle" fill="#fff6e2" font-size="56" font-family="Georgia,serif" font-weight="700">1984</text>
+ <text x="907" y="347" text-anchor="middle" fill="#fff6e2" font-size="11">GEORGE ORWELL</text>
+</g>
+<text x="315" y="439" fill="#34352f" font-size="17" font-weight="550">Book Category</text>
+<rect x="1047" y="412" width="31" height="31" rx="7" fill="#fff" stroke="#b9b9b2"/>
+<text x="1062" y="433" text-anchor="middle" fill="#353a35" font-size="16">▦</text>
+</g></g></svg>
