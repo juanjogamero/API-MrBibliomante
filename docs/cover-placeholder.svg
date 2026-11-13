@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="520" viewBox="0 0 360 520" role="img" aria-label="Portada no disponible">
+<defs><linearGradient id="paper" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#d6d8ce"/><stop offset="1" stop-color="#abb9ae"/></linearGradient><filter id="shadow"><feDropShadow dx="3" dy="6" stdDeviation="9" flood-color="#45544b" flood-opacity=".12"/></filter></defs>
+<rect width="360" height="520" rx="5" fill="url(#paper)"/>
+<path d="M24 0v520" stroke="#7d9588" stroke-width="9" opacity=".4"/>
+<rect x="45" y="39" width="274" height="442" rx="2" fill="none" stroke="#f7f7ef" stroke-opacity=".56" stroke-width="2"/>
+<g fill="none" stroke="#fff" stroke-opacity=".75" stroke-width="4" stroke-linejoin="round" stroke-linecap="round">
+<path d="M128 203c32-7 51 1 52 21 1-20 20-28 52-21v103c-31-6-51-1-52 18-1-19-21-24-52-18V203Z"/>
+<path d="M180 224v99M144 224c12-2 21 0 25 2M144 240c12-2 21 0 25 2M216 224c-12-2-21 0-25 2M216 240c-12-2-21 0-25 2"/>
+</g>
+<path d="M123 356h114" stroke="#fff" stroke-opacity=".5"/>
+<text x="180" y="379" fill="#f7f8f4" font-family="Arial,Helvetica,sans-serif" font-size="16" font-weight="600" letter-spacing="3" text-anchor="middle">THE BOOKS</text>
+<text x="180" y="407" fill="#f8f8f5" font-family="Arial,Helvetica,sans-serif" font-size="11" letter-spacing="2" text-anchor="middle">PORTADA NO DISPONIBLE</text></svg>
