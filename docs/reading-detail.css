@@ -258,3 +258,81 @@ main{max-width:none!important;width:100%!important;min-width:0}
   .main-column:has(.discover-page) .recommend-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
   .main-column:has(.discover-page) .discover-page:before{height:240px!important}
 }
+
+
+/* Cohesive editorial language for loan, reader, and event details. */
+.detail-heading{background:#eeecdf;border-radius:14px 14px 0 0;padding:38px 44px;margin-bottom:0;min-height:175px}
+.detail-heading h1{color:#20241f;font-size:clamp(30px,3.2vw,46px);font-weight:500;letter-spacing:-.05em}
+.detail-heading .eyebrow{color:#9f8e7b}
+.detail-heading p{color:#6f736a;font-size:12px;margin-top:9px}
+.loan-detail-grid{
+  background:#fff;border:1px solid #ebeae4;border-top:0;
+  border-radius:0 0 14px 14px;padding:28px;gap:26px;
+  grid-template-columns:minmax(0,1.5fr) minmax(265px,.85fr)
+}
+.loan-main-panel,.loan-detail-grid .panel{
+  box-shadow:none!important;border:1px solid #efeee8!important;border-radius:10px!important
+}
+.loan-main-panel{padding:28px}
+.loan-main-panel h3{color:#292c26;font-size:16px;font-weight:600}
+.loan-book-preview{gap:25px;align-items:center}
+.loan-book-preview img.real-cover{
+  width:auto!important;max-width:125px;max-height:170px;height:170px;
+  object-fit:contain;background:#f2f1e9;padding:8px;border-radius:6px
+}
+.loan-book-preview h2{font-size:24px;font-weight:550;color:#272922}
+.loan-book-preview p{color:#858a80}
+.loan-book-preview .inline-link{color:#a26f54}
+.timeline-marker{background:#f7f7f2;color:#7f867d;border-color:#e9e9df}
+.timeline-item strong{color:#333e36;font-weight:600}
+.timeline-item small{color:#9ea197}
+.detail-sidebar .panel{background:#fcfcf9}
+.reader-mini .reader-avatar{background:#eee4d7;color:#816b56;border-radius:50%}
+.metadata-list div{border-color:#ecece7}
+.metadata-list dt{color:#8e918a}.metadata-list dd{color:#363c34}
+.reader-detail-hero{
+  background:#eeecdf;border-radius:16px;border:0;min-height:250px;
+  padding:45px;gap:28px;box-shadow:none
+}
+.reader-detail-hero .reader-xl{width:115px;height:115px;border-radius:50%;background:#d8d1c0;color:#535548;font-size:27px}
+.reader-detail-hero h1{font-size:clamp(28px,3.6vw,49px);color:#242721;font-weight:550}
+.reader-detail-hero p{color:#777f72}
+.reader-summary .detail-kpi{background:#fff;border-radius:10px;border-color:#ecebe6;box-shadow:none}
+.reader-summary .detail-kpi strong{color:#353e32;font-size:26px;font-weight:600}
+.reader-summary .detail-kpi>span{background:#f2efe7;color:#8d796b;border-radius:10px}
+.reader-summary .detail-kpi small{color:#919890}
+.event-detail-banner{border-radius:15px;min-height:340px;background:#323d36}
+.event-detail-banner:after{background:linear-gradient(90deg,rgba(26,34,30,.9),rgba(36,46,35,.47))}
+.event-detail-overlay{padding:66px 50px}
+.event-detail-overlay h1{font-size:clamp(34px,4vw,54px);font-weight:500;letter-spacing:-.05em}
+.event-detail-overlay p{color:#e1e4dd}
+.event-detail-overlay .eyebrow{color:#d7c4ab}
+.event-summary .detail-kpi{border:1px solid #ecebe6;border-radius:11px}
+.event-summary .detail-kpi strong{color:#333b33;font-weight:600}
+.detail-lower .modern-panel{
+  border:1px solid #eeede8!important;border-radius:11px!important;
+  padding:25px;background:#fff;box-shadow:none!important
+}
+.detail-lower .panel-heading h3{font-size:16px;font-weight:600;color:#282e27}
+.detail-lower .history-row{border-color:#eeeee8}
+.detail-lower .history-row strong{color:#343e35;font-weight:600}
+.detail-lower .history-row small{color:#9a9f94}
+.detail-lower .history-icon{color:#8a897e;background:#f4f3ed;border-radius:50%}
+.detail-lower .reading-history-item .badge{font-size:9px}
+@media(max-width:1050px){
+  .loan-detail-grid{grid-template-columns:1fr}
+  .detail-heading{padding:32px}
+  .reader-detail-hero{padding:32px}
+}
+@media(max-width:620px){
+  .detail-heading{padding:27px 23px;min-height:0;gap:12px}
+  .loan-detail-grid{padding:14px}
+  .loan-main-panel{padding:20px}
+  .loan-book-preview{gap:14px}
+  .loan-book-preview img.real-cover{height:126px;max-width:94px}
+  .loan-book-preview h2{font-size:19px}
+  .reader-detail-hero{padding:28px 21px;gap:16px}
+  .reader-detail-hero .reader-xl{width:72px;height:72px;font-size:20px}
+  .reader-detail-hero h1{font-size:27px}
+  .event-detail-overlay{padding:43px 24px}
+}
