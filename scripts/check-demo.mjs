@@ -36,6 +36,13 @@ const history = {replaceState:(_a,_b,hash)=>{currentHash=hash;}};
 runInNewContext(code,{ document,window,localStorage,history,location,Intl,Date,Math,Number,String,
   Object,Array,JSON,RegExp,Map,Set,Boolean,Symbol,isNaN,console,setTimeout,clearTimeout });
 const view = ()=>el("#view").innerHTML;
+const page = readFileSync(new URL("../docs/index.html", import.meta.url), "utf8");
+const readability = readFileSync(new URL("../docs/readability.css", import.meta.url), "utf8");
+assert.ok(page.includes('readability.css'));
+assert.ok(page.includes('type-scale-control'));
+assert.ok(readability.includes('font-size: 1rem'));
+assert.ok(readability.includes('data-type-scale="2"'));
+
 assert.match(view(),/Book Recommendation/);
 assert.match(view(),/Book Category/);
 assert.match(view(),/discover-search-form/);
@@ -75,4 +82,11 @@ const filterBtn={dataset:{filter:"favoritos"}};
 }}));
 assert.match(view(),/La sombra del viento/);
 assert.doesNotMatch(view(),/Cien años de soledad/);
-console.log("✓ Discover, portadas ISBN, navegación, fichas, favoritos y filtros: OK");
+
+const fontButton = {dataset:{action:"type-scale"},disabled:false};
+(listeners.click || []).forEach(fn=>fn({
+  target:{closest:sel=>sel==="[data-action]" ? fontButton : null}
+}));
+assert.equal(storage.get("mrbibliomante-text-scale"), "1");
+assert.match(el("#type-scale-control").innerHTML, /110%/);
+console.log("✓ Discover, fichas, favoritos y control de tamaño de letra: OK");

@@ -4,6 +4,26 @@
   const STORAGE = "mrbibliomante-demo-v1";
   const $ = (s, root = document) => root.querySelector(s);
   const $$ = (s, root = document) => [...root.querySelectorAll(s)];
+
+  // Ajuste visual independiente de los datos de la biblioteca.
+  const TYPE_SCALE_KEY = "mrbibliomante-text-scale";
+  const TYPE_SCALE_VALUES = ["100%", "110%", "120%"];
+  let typeScale = 0;
+  try {
+    const saved = Number(localStorage.getItem(TYPE_SCALE_KEY));
+    if ([0, 1, 2].includes(saved)) typeScale = saved;
+  } catch (_) { /* Modo sin almacenamiento. */ }
+  function applyTypeScale() {
+    document.documentElement?.setAttribute("data-type-scale", String(typeScale));
+    const control = $("#type-scale-control");
+    if (control) {
+      control.innerHTML = 'Aa <span class="type-label">' + TYPE_SCALE_VALUES[typeScale] + '</span>';
+      control.setAttribute("aria-label", "Tamaño de letra: " + TYPE_SCALE_VALUES[typeScale] + ". Pulsar para ampliar.");
+      control.setAttribute("title", "Cambiar tamaño de letra");
+    }
+  }
+  applyTypeScale();
+
   const icon = (name) => '<svg class="icon" aria-hidden="true"><use href="#i-' + name + '"></use></svg>';
   const esc = (value) => String(value ?? "").replace(/[&<>"']/g, c => ({
     "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
@@ -584,6 +604,15 @@ function render() {
       name + '" name="' + name + '" required><option value="">Selecciona una opción</option>' + options + '</select></div>';
   }
   function openAction(action, id) {
+
+    if (action === "type-scale") {
+      typeScale = (typeScale + 1) % TYPE_SCALE_VALUES.length;
+      try { localStorage.setItem(TYPE_SCALE_KEY, String(typeScale)); } catch (_) { /* En memoria. */ }
+      applyTypeScale();
+      toast("Tamaño de letra: " + TYPE_SCALE_VALUES[typeScale]);
+      return;
+    }
+
 
     if (action === "copy-book-link") {
       const b = book(id);

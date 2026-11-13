@@ -12,6 +12,8 @@
 
 Una biblioteca digital para explorar libros reales, descubrir categorías y gestionar tus lecturas.
 
+**Pensado para leer cómodamente:** tipografía Inter de mayor tamaño, contraste mejorado y botón **Aa** para adaptar el tamaño del texto (100 %, 110 % o 120 %).
+
 </div>
 
 ---
