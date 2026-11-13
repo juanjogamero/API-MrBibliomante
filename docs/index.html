@@ -10,11 +10,12 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://covers.openlibrary.org">
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="premium.css">
   <link rel="stylesheet" href="the-books.css">
   <link rel="stylesheet" href="reading-detail.css">
+  <link rel="stylesheet" href="readability.css">
   <script src="app.js" defer></script>
 </head>
 <body>
@@ -80,6 +81,7 @@
             <svg class="icon"><use href="#i-search"/></svg>
             <input id="global-search" type="search" autocomplete="off" placeholder="Buscar un libro..." aria-label="Buscar un libro">
           </label>
+          <button type="button" id="type-scale-control" class="type-scale-control" data-action="type-scale" aria-label="Aumentar tamaño de letra" title="Cambiar tamaño de letra">Aa <span class="type-label">100%</span></button>
           <button type="button" class="profile-button" data-action="info" aria-label="Información de la biblioteca"><span class="profile-avatar">M</span><span>Mi biblioteca</span><svg class="icon"><use href="#i-chevron"/></svg></button>
           <button type="button" class="notification-button" data-action="notifications" aria-label="Ver actividad reciente"><svg class="icon"><use href="#i-bell"/></svg><span class="notification-dot"></span></button>
         </div>
