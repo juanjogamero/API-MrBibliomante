@@ -338,7 +338,7 @@
       '<article class="info-card"><h3>' + icon("external") + ' Código abierto</h3><p>' +
       'Puedes revisar los controladores REST, entidades JPA, pruebas automatizadas y documentación técnica en el repositorio.</p>' +
       '<p style="margin-top:14px"><a class="btn btn-primary" target="_blank" rel="noopener noreferrer" ' +
-      'href="https://github.com/juanjogamero/API-MrBibliomante">Ver en GitHub ' + icon("external") + '</a></p></article></div>' +
+      'href="https://github.com/juanjogamero/MrBibliomante-Sistema-de-Gestion-Bibliotecaria">Ver en GitHub ' + icon("external") + '</a></p></article></div>' +
       section("Ejecuta la API auténtica en tu equipo") +
       '<div class="panel"><p class="modal-desc">El backend utiliza PostgreSQL. Para probar sus endpoints reales, ' +
       'descarga el repositorio y ejecuta desde su carpeta raíz:</p><pre class="code-box">docker compose up -d\n' +
