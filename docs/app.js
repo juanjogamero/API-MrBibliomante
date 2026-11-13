@@ -23,9 +23,9 @@
   function seed() {
     return {
       books: [
-        {id:1, title:"La sombra del viento", author:"Carlos Ruiz Zafón", genre:"Novela", language:"Español", isbn:"9788408172178", copies:4, color:1},
+        {id:1, title:"La sombra del viento", author:"Carlos Ruiz Zafón", genre:"Novela", language:"Español", isbn:"9788408079545", copies:4, color:1},
         {id:2, title:"Cien años de soledad", author:"Gabriel García Márquez", genre:"Realismo mágico", language:"Español", isbn:"9788437604947", copies:3, color:2},
-        {id:3, title:"El nombre del viento", author:"Patrick Rothfuss", genre:"Fantasía", language:"Español", isbn:"9788401352836", copies:2, color:3},
+        {id:3, title:"El nombre del viento", author:"Patrick Rothfuss", genre:"Fantasía", language:"Español", isbn:"9788499082479", copies:2, color:3},
         {id:4, title:"1984", author:"George Orwell", genre:"Distopía", language:"Español", isbn:"9788499890944", copies:3, color:4},
         {id:5, title:"El principito", author:"Antoine de Saint-Exupéry", genre:"Fábula", language:"Español", isbn:"9788478887194", copies:5, color:0},
         {id:6, title:"Los pilares de la Tierra", author:"Ken Follett", genre:"Histórica", language:"Español", isbn:"9788401328513", copies:2, color:5}
@@ -59,7 +59,19 @@
   function load() {
     try {
       const saved = JSON.parse(localStorage.getItem(STORAGE));
-      if (saved && ["books","users","loans","events","activity"].every(key => Array.isArray(saved[key]))) return saved;
+      if (saved && ["books","users","loans","events","activity"].every(key => Array.isArray(saved[key]))) {
+        let migrated = false;
+        for (const b of saved.books) {
+          if (b.id === 1 && b.title === "La sombra del viento" && b.isbn === "9788408172178") {
+            b.isbn = "9788408079545"; migrated = true;
+          }
+          if (b.id === 3 && b.title === "El nombre del viento" && b.isbn === "9788401352836") {
+            b.isbn = "9788499082479"; migrated = true;
+          }
+        }
+        if (migrated) localStorage.setItem(STORAGE, JSON.stringify(saved));
+        return saved;
+      }
     } catch (_) { /* Storage may be blocked in privacy mode. */ }
     return seed();
   }
@@ -108,9 +120,9 @@
   const cover = b => b && /^\d{13}$/.test(String(b.isbn || "")) ?
     "https://covers.openlibrary.org/b/isbn/" + b.isbn + "-L.jpg?default=false" : null;
   const coverImage = (b, kind = "") => '<img class="real-cover ' + kind + '" src="' +
-    esc(cover(b) || photo(b,400)) + '" data-fallback="' + esc(photo(b,400)) + '" alt="Portada de ' + esc(b?.title || "libro") +
-    '" loading="lazy" decoding="async">';
-    let genreFilter = "todos", catalogSort = "titulo", loanFilter = "todos", viewMode = "grid";
+    esc(cover(b) || "cover-placeholder.svg") + '" data-fallback="cover-placeholder.svg" alt="Portada de ' +
+    esc(b?.title || "libro") + '" loading="lazy" decoding="async">';
+  let genreFilter = "todos", catalogSort = "titulo", loanFilter = "todos", viewMode = "grid";
   if (!Array.isArray(db.favorites)) db.favorites = [];
   const fav = id => db.favorites.includes(Number(id));
   const avatarText = name => String(name || "").trim().split(/\s+/).slice(0,2).map(x => x[0] || "").join("").toUpperCase();
@@ -233,7 +245,7 @@
       '<div class="table-wrap table-modern"><table><thead><tr><th>LIBRO</th><th>LECTOR</th><th>VENCIMIENTO</th><th>ESTADO</th><th></th></tr></thead><tbody>' +
       (filtered.length ? filtered.map(p=> {
         const b=book(p.bookId), u=user(p.userId), s=loanStatus(p);
-        return '<tr><td><a class="table-book" href="#prestamos/'+p.id+'"><img src="'+(cover(b)||photo(b,130))+'" loading="lazy" alt="">' +
+        return '<tr><td><a class="table-book" href="#prestamos/'+p.id+'"><img class="real-cover" data-fallback="cover-placeholder.svg" src="'+(cover(b)||"cover-placeholder.svg")+'" loading="lazy" alt="">' +
           '<span><strong>'+esc(b?.title||"Libro")+'</strong><small>Préstamo #'+String(p.id).padStart(3,"0")+'</small></span></a></td>' +
           '<td><a class="table-inline-link" href="#usuarios/'+(u?.id||0)+'">'+esc(u?.name||"Lector")+'</a></td>' +
           '<td><strong>'+prettyDate(p.end)+'</strong><small class="cell-muted">'+(p.returned?"Devuelto el "+prettyDate(p.returned):
@@ -298,7 +310,7 @@
 function bookDetailView(b) {
   const free=available(b),loans=db.loans.filter(p=>p.bookId===b.id).slice().reverse(), related=db.books.filter(x=>x.id!==b.id && x.genre===b.genre).slice(0,3);
   return '<div class="detail-top">'+back("libros","Volver al catálogo")+'<span>CATÁLOGO / LIBRO #'+String(b.id).padStart(3,"0")+'</span></div>'+
-    '<section class="book-detail"><div class="detail-photo"><img src="'+(cover(b)||photo(b,1150))+'" alt="Portada bibliográfica de Open Library">'+
+    '<section class="book-detail"><div class="detail-photo"><img class="real-cover" data-fallback="cover-placeholder.svg" src="'+(cover(b)||"cover-placeholder.svg")+'" alt="Portada bibliográfica de Open Library">'+
     '<div class="photo-source">Portada · Open Library</div></div>'+
     '<div class="detail-content"><span class="eyebrow">COLECCIÓN / '+esc(b.genre).toUpperCase()+'</span>'+
     '<h1>'+esc(b.title)+'</h1><p class="detail-author">de <strong>'+esc(b.author)+'</strong></p>'+
@@ -319,7 +331,7 @@ function bookDetailView(b) {
       '<span><strong>'+esc(user(p.userId)?.name||"Lector")+'</strong><small>'+prettyDate(p.start)+' · Hasta '+prettyDate(p.end)+'</small></span>'+
       statStatus(loanStatus(p))+'<span class="history-arrow">↗</span></a>').join(""):'<p class="muted">Este libro todavía no tiene préstamos.</p>')+
     '</div><div class="panel modern-panel"><div class="panel-heading"><h3>De la misma categoría</h3></div>'+
-    (related.length?related.map(r=>'<a class="mini-loan" href="#libros/'+r.id+'"><img src="'+(cover(r)||photo(r,160))+'" alt="" loading="lazy">'+
+    (related.length?related.map(r=>'<a class="mini-loan" href="#libros/'+r.id+'"><img class="real-cover" data-fallback="cover-placeholder.svg" src="'+(cover(r)||"cover-placeholder.svg")+'" alt="" loading="lazy">'+
       '<span><strong>'+esc(r.title)+'</strong><small>'+esc(r.author)+'</small></span><span class="mini-end">↗</span></a>').join("") :
       '<p class="muted">Descubre el resto de la colección en el catálogo.</p>')+
     '<a class="inline-link" href="#libros">Explorar catálogo →</a></div></div>';
@@ -330,7 +342,7 @@ function loanDetailView(p) {
    '<div class="detail-heading"><div><span class="eyebrow">FICHA DEL MOVIMIENTO</span><h1>Préstamo #'+String(p.id).padStart(3,"0")+'</h1>'+
    '<p>Detalle y seguimiento de la circulación del ejemplar.</p></div>'+statStatus(s)+'</div>'+
    '<div class="loan-detail-grid"><div class="panel loan-main-panel"><div class="loan-book-preview">'+
-   '<img src="'+(cover(b)||photo(b,440))+'" alt="Fotografía de libros" loading="lazy"><div><span class="eyebrow">LIBRO PRESTADO</span>'+
+   '<img class="real-cover" data-fallback="cover-placeholder.svg" src="'+(cover(b)||"cover-placeholder.svg")+'" alt="Fotografía de libros" loading="lazy"><div><span class="eyebrow">LIBRO PRESTADO</span>'+
    '<h2><a href="#libros/'+(b?.id||0)+'">'+esc(b?.title||"Libro")+'</a></h2>'+
    '<p>'+esc(b?.author||"")+'</p><a href="#libros/'+(b?.id||0)+'" class="inline-link">Ver ficha del libro ↗</a></div></div>'+
    '<div class="detail-rule"></div><h3>Seguimiento del préstamo</h3>'+
@@ -358,7 +370,7 @@ function userDetailView(u) {
  kpi(enroll.length,"Eventos inscritos","calendar")+'</div>'+
  '<div class="detail-lower"><div class="panel modern-panel"><div class="panel-heading"><h3>Historial de lectura</h3>'+
  '<span>'+loans.length+' movimientos</span></div>'+
- (loans.length?loans.map(p=>'<a href="#prestamos/'+p.id+'" class="history-row"><img class="tiny-photo" src="'+(cover(book(p.bookId))||photo(book(p.bookId),160))+'" loading="lazy" alt="">'+
+ (loans.length?loans.map(p=>'<a href="#prestamos/'+p.id+'" class="history-row"><img class="tiny-photo" src="'+(cover(book(p.bookId))||"cover-placeholder.svg")+'" loading="lazy" alt="">'+
  '<span><strong>'+esc(book(p.bookId)?.title||"Libro")+'</strong><small>'+prettyDate(p.start)+' · Hasta '+prettyDate(p.end)+'</small></span>'+
  statStatus(loanStatus(p))+'<span class="history-arrow">↗</span></a>').join(""):'<p class="muted">Todavía no tiene préstamos registrados.</p>')+
  '</div><div class="panel modern-panel"><div class="panel-heading"><h3>Sus eventos</h3></div>'+
