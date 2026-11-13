@@ -91,16 +91,43 @@
   };
   const matches = (...fields) => fields.some(f => String(f ?? "").toLowerCase().includes(search.toLowerCase()));
 
+  
+  // Fotografía editorial de libros reales: imágenes gratuitas de Unsplash.
+  // No son las portadas originales de las obras indicadas.
+  const photoIds = [
+    "photo-1544947950-fa07a98d237f",
+    "photo-1495446815901-a7297e633e8d",
+    "photo-1512820790803-83ca734da794",
+    "photo-1481627834876-b7833e8f5570",
+    "photo-1507842217343-583bb7270b66",
+    "photo-1532012197267-da84d127e765"
+  ];
+  const photo = (b, w = 760) => "https://images.unsplash.com/" +
+      photoIds[((Number(b?.color ?? b?.id ?? 0) % photoIds.length) + photoIds.length) % photoIds.length] +
+      "?auto=format&fit=crop&w=" + w + "&q=82";
+  const heroPhoto = "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?auto=format&fit=crop&w=1400&q=85";
+  let genreFilter = "todos", catalogSort = "titulo", loanFilter = "todos", viewMode = "grid";
+  if (!Array.isArray(db.favorites)) db.favorites = [];
+  const fav = id => db.favorites.includes(Number(id));
+  const avatarText = name => String(name || "").trim().split(/\s+/).slice(0,2).map(x => x[0] || "").join("").toUpperCase();
+  const kpi = (number, label, iconName) => '<div class="detail-kpi"><span>' + icon(iconName) +
+    '</span><div><strong>' + esc(number) + '</strong><small>' + esc(label) + '</small></div></div>';
+  const back = (section, label) => '<a class="back-link" href="#' + section + '">← ' + esc(label) + '</a>';
+  const statStatus = s => s === "devuelto" ? badge("Devuelto", "green") : s === "vencido" ?
+    badge("Vencido", "red") : badge("En circulación", "blue");
+
   function bookCard(b) {
-    const [bg, cover, symbol] = palette[(b.color ?? 0) % palette.length];
-    const free = available(b), availableBadge = free ? badge(free + " " + plural(free, "disponible", "disponibles"), "green") : badge("Sin ejemplares", "red");
-    return '<article class="book-card"><div class="cover-area" style="--cover-bg:' + bg + '"><div class="book-cover" style="--cover:' + cover + '">' +
-      '<span class="cover-rule"></span><span class="cover-symbol">' + symbol + '</span><span class="cover-title">' + esc(b.title) +
-      '</span><span class="cover-rule"></span></div></div><div class="book-info"><span class="category">' + esc(b.genre) +
-      '</span><h3>' + esc(b.title) + '</h3><p class="author-name">' + esc(b.author) + '</p><div class="book-bottom">' +
-      availableBadge + '<button class="btn btn-sm" data-action="loan" data-id="' + b.id + '"' + (!free ? " disabled" : "") +
-      '>Prestar ' + icon("arrow") + '</button></div></div></article>';
-  }
+    const free = available(b);
+    return '<article class="book-card book-card-v2">' +
+      '<a class="photo-frame" href="#libros/' + b.id + '" aria-label="Ver ficha de ' + esc(b.title) + '">' +
+      '<img src="' + photo(b,720) + '" loading="lazy" decoding="async" alt="Fotografía editorial de libros, ilustrativa" />' +
+      '<span class="photo-caption">Fotografía de ambiente</span></a>' +
+      '<div class="book-info"><div class="book-eyebrow">' + esc(b.genre) + ' <span>·</span> ' + esc(b.language || "Español") + '</div>' +
+      '<a class="book-title-link" href="#libros/' + b.id + '"><h3>' + esc(b.title) + '</h3></a>' +
+      '<p class="author-name">' + esc(b.author) + '</p>' +
+      '<div class="book-bottom">' + (free ? badge(free + ' ' + plural(free,"ejemplar","ejemplares") + ' libres',"green") : badge("Sin disponibilidad","red")) +
+      '<a class="book-explore" href="#libros/' + b.id + '" aria-label="Ver detalles de ' + esc(b.title) + '">' + icon("arrow") + '</a></div></div></article>';
+}
   function stats() {
     const values = [
       {title:"Libros en catálogo",value:db.books.length,desc:"Títulos registrados",icon:"book",color:"peach"},
@@ -119,82 +146,115 @@
       esc(prettyDate(a.date)) + '</span></div>').join("") : '<p class="results-note">Sin actividad reciente.</p>') + '</div>';
   }
   function homeView() {
-    const sample = db.books.slice(0, 3);
-    return '<section class="hero"><div class="hero-copy"><span class="eyebrow">UNA NUEVA FORMA DE EXPLORAR</span>' +
-      '<h1>Las mejores historias empiezan aquí.</h1><p>Gestiona tu biblioteca en un solo lugar. Explora el catálogo, ' +
-      'organiza préstamos y descubre actividades culturales.</p>' +
-      actionButton("Explorar catálogo", "browse", "arrow", "btn btn-coral") +
-      '</div><div class="hero-art" aria-hidden="true"><div class="hero-visual">' + icon("book") +
-      '</div><span class="hero-star star-a">✧</span><span class="hero-star star-b">✦</span></div></section>' +
-      head("TU ESPACIO DE LECTURA", "Bienvenido a MrBibliomante", "Un vistazo a lo que está pasando en tu biblioteca.") +
+    const sample = db.books.slice(0,4);
+    const latest = [...db.loans].reverse().slice(0,4);
+    return '<section class="hero hero-v2"><div class="hero-shade"></div><img class="hero-photo" src="' + heroPhoto +
+      '" alt="Estanterías de libros reales en una biblioteca" />' +
+      '<div class="hero-copy"><div class="hero-kicker"><span class="live-dot"></span> TU BIBLIOTECA, SIEMPRE ABIERTA</div>' +
+      '<h1>Historias por descubrir.<br><em>Un lugar para todas.</em></h1>' +
+      '<p>Explora la colección, sigue tus préstamos y conecta con otros lectores. Una biblioteca que puedes probar de verdad.</p>' +
+      '<div class="hero-ctas"><a class="btn btn-coral" href="#libros">Explorar catálogo ' + icon("arrow") + '</a>' +
+      '<a class="hero-secondary" href="#prestamos">Ver préstamos <span>↗</span></a></div></div></section>' +
+      '<div class="welcome-line"><div><span class="eyebrow">PANEL DE CONTROL</span><h2>Tu biblioteca, de un vistazo</h2><p>Consulta la actividad y gestiona cada rincón de la colección.</p></div>' +
+      '<span class="today-label">' + prettyDate(today()) + '</span></div>' +
       stats() +
-      section("Descubre nuestro catálogo", "libros", "Ver todos los libros") +
-      (sample.length ? '<div class="card-grid">' + sample.map(bookCard).join("") + '</div>' : empty("Aún no hay libros", "Añade el primero desde el catálogo.")) +
-      section("Actividad de tu biblioteca") +
-      '<div class="grid-two"><section class="panel"><h3>Últimos movimientos</h3>' + recentActivity() +
-      '</section><section class="panel"><h3>Accesos rápidos</h3><div class="quick-links">' +
-      [['Nuevo préstamo',"loan","book"],["Registrar libro","new-book","plus"],["Añadir lector","new-user","users"],["Programar evento","new-event","calendar"]].map(x =>
-        '<button type="button" data-action="' + x[1] + '">' + icon(x[2]) + '<span>' + x[0] +
-        '</span><span class="arrow-end">' + icon("arrow") + '</span></button>').join("") + '</div></section></div>';
-  }
+      section("Una colección que merece la pena", "libros", "Explorar colección") +
+      (sample.length ? '<div class="card-grid card-grid-v2">' + sample.map(bookCard).join("") + '</div>' :
+      empty("Empieza tu colección", "Añade un libro desde el catálogo.")) +
+      '<div class="home-panels"><div class="panel modern-panel"><div class="panel-heading"><h3>Préstamos recientes</h3>' +
+      '<a href="#prestamos">Ver todos ↗</a></div>' +
+      (latest.length ? latest.map(p => '<a class="mini-loan" href="#prestamos/' + p.id + '">' +
+        '<img src="' + photo(book(p.bookId),180) + '" alt="" loading="lazy">' +
+        '<span><strong>' + esc(book(p.bookId)?.title || "Libro") + '</strong><small>' +
+        esc(user(p.userId)?.name || "Lector") + '</small></span><span class="mini-end">' + statStatus(loanStatus(p)) + '</span></a>').join("") :
+        '<p class="muted">Sin préstamos recientes</p>') + '</div>' +
+      '<div class="panel modern-panel"><div class="panel-heading"><h3>Acciones rápidas</h3><span>GESTIONAR</span></div>' +
+      '<div class="quick-actions-v2">' +
+      [["Prestar un libro","loan","book"],["Añadir libro","new-book","plus"],["Nuevo lector","new-user","users"],["Crear evento","new-event","calendar"]].map(x =>
+        '<button data-action="' + x[1] + '"><span class="quick-circle">' + icon(x[2]) + '</span><strong>' +
+        x[0] + '</strong>' + icon("arrow") + '</button>').join("") + '</div></div></div>';
+}
   function booksView() {
-    const list = db.books.filter(b => matches(b.title,b.author,b.genre,b.isbn) && (filter === "todos" || (filter === "disponibles" ? available(b) > 0 : available(b) === 0)));
-    return head("GESTIÓN DE CATÁLOGO", "Nuestra colección", "Descubre los libros disponibles en la biblioteca.",
-      actionButton("Añadir libro", "new-book")) +
-      '<div class="filters">' + [["todos","Todos los libros"],["disponibles","Disponibles"],["agotados","Sin ejemplares"]].map(x =>
-        '<button class="filter-button' + (filter === x[0] ? " active" : "") + '" data-filter="' + x[0] + '">' + x[1] + '</button>').join("") +
-      '</div><p class="results-note">Mostrando ' + list.length + ' de ' + db.books.length + ' títulos · ' +
-      db.books.reduce((n,b) => n + available(b),0) + ' ejemplares libres en total</p>' +
-      (list.length ? '<div class="card-grid">' + list.map(bookCard).join("") + '</div>' : empty("No encontramos libros", "Prueba con otra búsqueda o añade un título.")); 
-  }
+    const genres = [...new Set(db.books.map(b => b.genre))].sort((a,b)=>a.localeCompare(b,"es"));
+    let list = db.books.filter(b =>
+      matches(b.title,b.author,b.genre,b.isbn) &&
+      (filter === "todos" || (filter === "disponibles" ? available(b) > 0 :
+        filter === "favoritos" ? fav(b.id) : available(b) === 0)) &&
+      (genreFilter === "todos" || b.genre === genreFilter));
+    list = list.slice().sort((a,b) => catalogSort === "autor" ? a.author.localeCompare(b.author,"es") :
+      catalogSort === "stock" ? available(b)-available(a) : a.title.localeCompare(b.title,"es"));
+    const filters = [["todos","Todos"],["disponibles","Disponibles"],["agotados","Agotados"],["favoritos","Guardados"]];
+    return head("COLECCIÓN / CATÁLOGO", "Explora nuestra biblioteca",
+      "Historias, autores y nuevos descubrimientos, en un mismo lugar.",
+      actionButton("Añadir libro","new-book","plus","btn btn-primary")) +
+      '<div class="catalog-toolbar"><div class="filters">' + filters.map(x =>
+        '<button class="filter-button' + (filter === x[0] ? " active" : "") + '" data-filter="' + x[0] + '">' + x[1] +
+        (x[0] === "favoritos" ? ' <span class="filter-count">' + db.favorites.length + '</span>' : '') + '</button>').join("") + '</div>' +
+      '<div class="toolbar-right"><label class="select-wrap">Género <select data-select="genre" aria-label="Filtrar por género">' +
+        '<option value="todos">Todos</option>' + genres.map(g=>'<option value="'+esc(g)+'"'+(genreFilter===g?' selected':'')+'>'+esc(g)+'</option>').join("") +
+        '</select></label><label class="select-wrap">Ordenar <select data-select="catalog-sort" aria-label="Ordenar catálogo">' +
+        [["titulo","Título A-Z"],["autor","Autor A-Z"],["stock","Más disponibles"]].map(x=>'<option value="'+x[0]+'"'+(catalogSort===x[0]?' selected':'')+'>'+x[1]+'</option>').join("") +
+        '</select></label><div class="view-toggle"><button class="'+(viewMode==="grid"?"is-active":"")+'" data-viewmode="grid" aria-label="Vista en cuadrícula" title="Cuadrícula">▦</button>' +
+        '<button class="'+(viewMode==="list"?"is-active":"")+'" data-viewmode="list" aria-label="Vista en lista" title="Lista">☷</button></div></div></div>' +
+      '<p class="results-note">' + list.length + ' de ' + db.books.length + ' títulos <span>·</span> ' +
+      db.books.reduce((n,b)=>n+available(b),0) + ' ejemplares disponibles</p>' +
+      (list.length ? '<div class="card-grid card-grid-v2 ' + (viewMode === "list" ? "catalog-list" : "") + '">' +
+        list.map(bookCard).join("") + '</div>' :
+        empty("Sin resultados", "Cambia los filtros o busca otro título."));
+}
   function loansView() {
-    const filtered = db.loans.filter(p => matches(book(p.bookId)?.title,user(p.userId)?.name,p.id,loanStatus(p)));
-    return head("CIRCULACIÓN Y CONTROL", "Gestión de préstamos",
-      "Consulta quién tiene cada ejemplar y registra devoluciones.",
-      actionButton("Nuevo préstamo", "loan")) +
-      '<div class="table-wrap"><table><thead><tr><th>LIBRO</th><th>LECTOR</th><th>DEVOLUCIÓN PREVISTA</th><th>ESTADO</th><th>ACCIÓN</th></tr></thead><tbody>' +
-      (filtered.length ? [...filtered].reverse().map(p => {
-        const s = loanStatus(p), label = s === "devuelto" ? "Devuelto" : s === "vencido" ? "Vencido" : "En préstamo";
-        return '<tr><td><strong>' + esc(book(p.bookId)?.title || "Libro eliminado") + '</strong><span class="cell-muted">#' +
-          p.id + ' · Desde ' + prettyDate(p.start) + '</span></td><td>' + esc(user(p.userId)?.name || "Usuario eliminado") +
-          '</td><td>' + prettyDate(p.end) + '</td><td>' + badge(label,s === "devuelto" ? "green" : s === "vencido" ? "red" : "blue") +
-          '</td><td>' + (p.returned ? '<span class="cell-muted">Finalizado</span>' :
-          '<button class="table-action" data-action="return" data-id="' + p.id + '">Registrar devolución</button>') + '</td></tr>';
-      }).join("") : '<tr><td colspan="5">No hay préstamos que coincidan con tu búsqueda.</td></tr>') +
-      '</tbody></table></div>';
-  }
+    const statusFilters = [["todos","Todos"],["activo","Activos"],["vencido","Vencidos"],["devuelto","Devueltos"]];
+    const filtered = db.loans.filter(p => matches(book(p.bookId)?.title,user(p.userId)?.name,p.id,loanStatus(p)) &&
+      (loanFilter === "todos" || loanStatus(p) === loanFilter)).slice().reverse();
+    return head("CIRCULACIÓN / PRÉSTAMOS", "Control de préstamos",
+      "Cada ejemplar tiene su historia. Consulta los movimientos y las fechas de devolución.",
+      actionButton("Registrar préstamo","loan")) +
+      '<div class="loans-summary"><span>' + kpi(activeLoans().length,"En circulación","return") + '</span><span>' +
+      kpi(db.loans.filter(p=>loanStatus(p)==="vencido").length,"Fuera de plazo","clock") +
+      '</span><span>' + kpi(db.loans.filter(p=>!!p.returned).length,"Devueltos","check") + '</span></div>' +
+      '<div class="filters loan-filters">' + statusFilters.map(x =>
+        '<button class="filter-button'+(loanFilter===x[0]?" active":"")+'" data-loanfilter="'+x[0]+'">'+x[1]+'</button>').join("")+'</div>' +
+      '<div class="table-wrap table-modern"><table><thead><tr><th>LIBRO</th><th>LECTOR</th><th>VENCIMIENTO</th><th>ESTADO</th><th></th></tr></thead><tbody>' +
+      (filtered.length ? filtered.map(p=> {
+        const b=book(p.bookId), u=user(p.userId), s=loanStatus(p);
+        return '<tr><td><a class="table-book" href="#prestamos/'+p.id+'"><img src="'+photo(b,130)+'" loading="lazy" alt="">' +
+          '<span><strong>'+esc(b?.title||"Libro")+'</strong><small>Préstamo #'+String(p.id).padStart(3,"0")+'</small></span></a></td>' +
+          '<td><a class="table-inline-link" href="#usuarios/'+(u?.id||0)+'">'+esc(u?.name||"Lector")+'</a></td>' +
+          '<td><strong>'+prettyDate(p.end)+'</strong><small class="cell-muted">'+(p.returned?"Devuelto el "+prettyDate(p.returned):
+            s==="vencido"?"Retraso de "+Math.abs(until(p.end))+" días":"Quedan "+until(p.end)+" días")+'</small></td>' +
+          '<td>'+statStatus(s)+'</td><td class="table-end"><a class="table-action" href="#prestamos/'+p.id+'">Ver detalle ↗</a></td></tr>';
+      }).join("") : '<tr><td colspan="5" class="empty-row">No hay préstamos con este filtro.</td></tr>') + '</tbody></table></div>';
+}
   function eventsView() {
-    const list = db.events.filter(e => matches(e.title,e.description));
-    return head("COMUNIDAD Y CULTURA", "Próximos eventos", "Actividades para compartir el placer de leer.",
-      actionButton("Crear evento", "new-event")) +
-      (list.length ? '<div class="event-grid">' + list.map(e => {
-        const date = new Date(e.date + "T12:00:00Z"), day = date.getUTCDate(),
-              month = new Intl.DateTimeFormat("es-ES",{month:"short",timeZone:"UTC"}).format(date).toUpperCase().replace(".","");
-        const full = e.users.length >= e.capacity, old = e.date < today();
-        return '<article class="event-card"><div class="event-top"><div class="event-date"><span class="event-datebox"><b>' +
-          day + '</b><small>' + month + '</small></span><span class="eyebrow">ENCUENTRO LITERARIO</span></div>' +
-          badge(old ? "Finalizado" : full ? "Completo" : "Plazas abiertas", old ? "gray" : full ? "red" : "green") +
-          '</div><h3>' + esc(e.title) + '</h3><p>' + esc(e.description) + '</p>' +
-          '<div class="event-meta"><span>' + icon("users") + ' ' + e.users.length + ' de ' + e.capacity + ' inscritos</span><span>' +
-          prettyDate(e.date) + '</span></div><div class="progress"><span style="width:' + Math.min(100,e.users.length / Math.max(1,e.capacity) * 100) +
-          '%"></span></div><div class="event-actions"><button class="btn btn-primary" data-action="signup" data-id="' + e.id +
-          '"' + (old ? " disabled" : "") + '>Gestionar inscripciones ' + icon("arrow") +
-          '</button></div></article>';
-      }).join("") + '</div>' : empty("Sin eventos disponibles", "Puedes organizar el siguiente encuentro desde aquí."));
-  }
+  const list=db.events.filter(e=>matches(e.title,e.description));
+  return head("CULTURA / ENCUENTROS", "Eventos que nos reúnen",
+    "Clubes de lectura, talleres y planes para amantes de las historias.",
+    actionButton("Crear evento","new-event"))+
+  '<div class="event-grid event-grid-v2">'+(list.length?list.map((e,i)=>{
+    const past=e.date<today(),full=e.users.length>=e.capacity;
+    return '<article class="event-card event-card-v2"><a href="#eventos/'+e.id+'" class="event-photo" aria-label="Ver evento '+esc(e.title)+'">' +
+      '<img src="'+photo({color:i+3},850)+'" alt="Fotografía de biblioteca y libros" loading="lazy">' +
+      '<span class="event-photo-date">'+prettyDate(e.date)+'</span></a><div class="event-card-content">'+
+      '<div class="event-topline">'+badge(past?"Finalizado":full?"Completo":"Inscripción abierta",past?"gray":full?"red":"green")+
+      '<span>EVENTO #'+String(e.id).padStart(2,"0")+'</span></div><h3><a href="#eventos/'+e.id+'">'+esc(e.title)+'</a></h3><p>'+esc(e.description)+'</p>'+
+      '<div class="event-meta">'+icon("users")+' '+e.users.length+'/'+e.capacity+' inscritos <span>'+
+      Math.max(0,e.capacity-e.users.length)+' plazas libres</span></div>'+
+      '<div class="progress"><span style="width:'+Math.min(100,e.users.length/Math.max(1,e.capacity)*100)+'%"></span></div>'+
+      '<a class="event-detail-link" href="#eventos/'+e.id+'">Ver el evento '+icon("arrow")+'</a></div></article>';
+  }).join(""):empty("Sin eventos","Programa una nueva actividad."))+'</div>';
+}
   function usersView() {
-    const list = db.users.filter(u => matches(u.name,u.email));
-    return head("NUESTRA COMUNIDAD", "Lectores de la biblioteca", "Personas que dan vida a cada historia.",
-      actionButton("Añadir lector", "new-user")) +
-      (list.length ? '<div class="person-list">' + list.map((u,i) => {
-        const number = db.loans.filter(p => p.userId === u.id && !p.returned).length;
-        const initials = u.name.trim().split(/\s+/).slice(0,2).map(x => x[0]?.toUpperCase() || "").join("");
-        const color = palette[i % palette.length];
-        return '<article class="person-card"><span class="avatar" style="--avatar-bg:' + color[0] + ';--avatar-color:' + color[1] + '">' +
-          esc(initials) + '</span><div><h3>' + esc(u.name) + '</h3><p>' + esc(u.email) + '</p></div>' +
-          '<span class="person-stat"><strong>' + number + '</strong>' + plural(number,"préstamo") + '</span></article>';
-      }).join("") + '</div>' : empty("No hay lectores", "Puedes añadir un lector nuevo para empezar."));
-  }
+  const list=db.users.filter(u=>matches(u.name,u.email));
+  return head("COMUNIDAD / LECTORES","Nuestra comunidad lectora",
+    "Personas, lecturas y conversaciones que dan vida a la biblioteca.",
+    actionButton("Añadir lector","new-user"))+
+  (list.length?'<div class="person-list person-grid-v2">'+list.map((u,i)=>{
+    const loans=db.loans.filter(p=>p.userId===u.id),active=loans.filter(p=>!p.returned).length;
+    return '<a class="person-card person-card-v2" href="#usuarios/'+u.id+'"><span class="avatar reader-avatar" style="--avatar-bg:'+palette[i%6][0]+';--avatar-color:'+palette[i%6][1]+'">'+esc(avatarText(u.name))+'</span>'+
+      '<div class="reader-copy"><h3>'+esc(u.name)+'</h3><p>'+esc(u.email)+'</p><span>'+loans.length+' préstamos registrados</span></div>'+
+      '<div class="person-stat"><strong>'+active+'</strong>en curso</div><span class="reader-arrow">'+icon("arrow")+'</span></a>';
+  }).join("")+'</div>':empty("No hay lectores","Registra un lector para empezar."));
+}
   function projectView() {
     return head("EL PROYECTO", "Una API, muchas historias", "Conoce la tecnología detrás de MrBibliomante.") +
       '<div class="info-grid"><article class="info-card"><h3>' + icon("book") + ' Backend original</h3><p>' +
@@ -218,21 +278,126 @@
       'utilizando Java 21.</div></div><div class="step"><span>3</span><div><strong>Abre Swagger UI</strong> ' +
       'en http://localhost:8080/swagger-ui.html.</div></div></div></div>';
   }
+  
+function bookDetailView(b) {
+  const free=available(b),loans=db.loans.filter(p=>p.bookId===b.id).slice().reverse(), related=db.books.filter(x=>x.id!==b.id && x.genre===b.genre).slice(0,3);
+  return '<div class="detail-top">'+back("libros","Volver al catálogo")+'<span>CATÁLOGO / LIBRO #'+String(b.id).padStart(3,"0")+'</span></div>'+
+    '<section class="book-detail"><div class="detail-photo"><img src="'+photo(b,1150)+'" alt="Fotografía editorial de libros reales — imagen ilustrativa">'+
+    '<div class="photo-source">Imagen ilustrativa · Unsplash</div></div>'+
+    '<div class="detail-content"><span class="eyebrow">COLECCIÓN / '+esc(b.genre).toUpperCase()+'</span>'+
+    '<h1>'+esc(b.title)+'</h1><p class="detail-author">de <strong>'+esc(b.author)+'</strong></p>'+
+    '<div class="detail-rule"></div><div class="availability-row">'+
+    (free?badge("Disponible","green"):badge("No disponible","red"))+
+    '<span>'+free+' de '+b.copies+' ejemplares libres</span></div>'+
+    '<div class="detail-progress"><span style="width:'+Math.max(0,Math.min(100,free/Math.max(1,b.copies)*100))+'%"></span></div>'+
+    '<div class="detail-buttons">'+actionButton("Registrar préstamo","loan","arrow","btn btn-coral", 'data-id="'+b.id+'"'+(free?"":" disabled"))+
+    '<button class="btn favorite-btn'+(fav(b.id)?" is-favorite":"")+'" data-action="favorite" data-id="'+b.id+'" aria-pressed="'+fav(b.id)+'">'+(fav(b.id)?"♥ Guardado":"♡ Guardar")+'</button>'+
+    '<button class="btn btn-ghost" data-action="edit-book" data-id="'+b.id+'">Editar libro</button></div>'+
+    '<p class="detail-note">Las imágenes son fotografías editoriales, no las cubiertas oficiales de cada título.</p>'+
+    '<div class="detail-metadata"><div><span>ISBN</span><strong>'+esc(b.isbn||"Sin registrar")+'</strong></div>'+
+    '<div><span>Idioma</span><strong>'+esc(b.language||"Español")+'</strong></div>'+
+    '<div><span>Género</span><strong>'+esc(b.genre)+'</strong></div>'+
+    '<div><span>Ejemplares</span><strong>'+b.copies+'</strong></div></div></div></section>'+
+    '<div class="detail-lower"><div class="panel modern-panel"><div class="panel-heading"><h3>Historial de préstamos</h3><span>'+loans.length+' movimientos</span></div>'+
+    (loans.length?loans.map(p=>'<a class="history-row" href="#prestamos/'+p.id+'"><span class="history-icon">'+icon("return")+'</span>'+
+      '<span><strong>'+esc(user(p.userId)?.name||"Lector")+'</strong><small>'+prettyDate(p.start)+' · Hasta '+prettyDate(p.end)+'</small></span>'+
+      statStatus(loanStatus(p))+'<span class="history-arrow">↗</span></a>').join(""):'<p class="muted">Este libro todavía no tiene préstamos.</p>')+
+    '</div><div class="panel modern-panel"><div class="panel-heading"><h3>De la misma categoría</h3></div>'+
+    (related.length?related.map(r=>'<a class="mini-loan" href="#libros/'+r.id+'"><img src="'+photo(r,160)+'" alt="" loading="lazy">'+
+      '<span><strong>'+esc(r.title)+'</strong><small>'+esc(r.author)+'</small></span><span class="mini-end">↗</span></a>').join("") :
+      '<p class="muted">Descubre el resto de la colección en el catálogo.</p>')+
+    '<a class="inline-link" href="#libros">Explorar catálogo →</a></div></div>';
+}
+function loanDetailView(p) {
+  const b=book(p.bookId),u=user(p.userId),s=loanStatus(p);
+  return '<div class="detail-top">'+back("prestamos","Volver a préstamos")+'<span>PRÉSTAMOS / #'+String(p.id).padStart(3,"0")+'</span></div>'+
+   '<div class="detail-heading"><div><span class="eyebrow">FICHA DEL MOVIMIENTO</span><h1>Préstamo #'+String(p.id).padStart(3,"0")+'</h1>'+
+   '<p>Detalle y seguimiento de la circulación del ejemplar.</p></div>'+statStatus(s)+'</div>'+
+   '<div class="loan-detail-grid"><div class="panel loan-main-panel"><div class="loan-book-preview">'+
+   '<img src="'+photo(b,440)+'" alt="Fotografía de libros" loading="lazy"><div><span class="eyebrow">LIBRO PRESTADO</span>'+
+   '<h2><a href="#libros/'+(b?.id||0)+'">'+esc(b?.title||"Libro")+'</a></h2>'+
+   '<p>'+esc(b?.author||"")+'</p><a href="#libros/'+(b?.id||0)+'" class="inline-link">Ver ficha del libro ↗</a></div></div>'+
+   '<div class="detail-rule"></div><h3>Seguimiento del préstamo</h3>'+
+   '<div class="timeline"><div class="timeline-item done"><span class="timeline-marker">'+icon("check")+'</span><div><strong>Préstamo registrado</strong><small>'+prettyDate(p.start)+'</small></div></div>'+
+   '<div class="timeline-item '+(s==="vencido"?"late":s==="devuelto"?"done":"")+'"><span class="timeline-marker">'+icon("clock")+'</span><div><strong>Fecha prevista de devolución</strong><small>'+prettyDate(p.end)+'</small></div></div>'+
+   (p.returned?'<div class="timeline-item done"><span class="timeline-marker">'+icon("check")+'</span><div><strong>Devolución realizada</strong><small>'+prettyDate(p.returned)+'</small></div></div>':
+    '<div class="timeline-item"><span class="timeline-marker">'+icon("return")+'</span><div><strong>Devolución pendiente</strong><small>'+(s==="vencido"?"Retrasado "+Math.abs(until(p.end))+" días":"Quedan "+until(p.end)+" días")+'</small></div></div>')+'</div>'+
+   (!p.returned?'<div class="detail-buttons">'+actionButton("Registrar devolución","return","check","btn btn-primary",'data-id="'+p.id+'"')+
+     '</div>':'<p class="completion-note">'+icon("check")+' Este préstamo se ha completado correctamente.</p>')+'</div>'+
+   '<div class="detail-sidebar"><div class="panel"><span class="eyebrow">LECTOR RESPONSABLE</span><div class="reader-mini">'+
+   '<span class="avatar reader-avatar">'+esc(avatarText(u?.name||"L"))+'</span><div><strong>'+esc(u?.name||"Lector")+'</strong>'+
+   '<small>'+esc(u?.email||"")+'</small></div></div><a class="btn btn-block" href="#usuarios/'+(u?.id||0)+'">Ver ficha del lector ↗</a></div>'+
+   '<div class="panel"><span class="eyebrow">RESUMEN</span><dl class="metadata-list">'+
+   '<div><dt>Identificador</dt><dd>#'+p.id+'</dd></div>'+
+   '<div><dt>Fecha de inicio</dt><dd>'+prettyDate(p.start)+'</dd></div>'+
+   '<div><dt>Fecha límite</dt><dd>'+prettyDate(p.end)+'</dd></div>'+
+   '<div><dt>Situación</dt><dd>'+statStatus(s)+'</dd></div></dl></div></div></div>';
+}
+function userDetailView(u) {
+ const loans=db.loans.filter(p=>p.userId===u.id).slice().reverse(),enroll=db.events.filter(e=>e.users.includes(u.id));
+ return '<div class="detail-top">'+back("usuarios","Volver a lectores")+'<span>LECTORES / #'+String(u.id).padStart(3,"0")+'</span></div>'+
+ '<div class="reader-detail-hero"><span class="avatar reader-avatar reader-xl">'+esc(avatarText(u.name))+'</span>'+
+ '<div><span class="eyebrow">PERFIL DEL LECTOR</span><h1>'+esc(u.name)+'</h1><p>'+esc(u.email)+'</p></div></div>'+
+ '<div class="reader-summary">'+kpi(loans.length,"Préstamos totales","book")+kpi(loans.filter(p=>!p.returned).length,"En circulación","return")+
+ kpi(enroll.length,"Eventos inscritos","calendar")+'</div>'+
+ '<div class="detail-lower"><div class="panel modern-panel"><div class="panel-heading"><h3>Historial de lectura</h3>'+
+ '<span>'+loans.length+' movimientos</span></div>'+
+ (loans.length?loans.map(p=>'<a href="#prestamos/'+p.id+'" class="history-row"><img class="tiny-photo" src="'+photo(book(p.bookId),160)+'" loading="lazy" alt="">'+
+ '<span><strong>'+esc(book(p.bookId)?.title||"Libro")+'</strong><small>'+prettyDate(p.start)+' · Hasta '+prettyDate(p.end)+'</small></span>'+
+ statStatus(loanStatus(p))+'<span class="history-arrow">↗</span></a>').join(""):'<p class="muted">Todavía no tiene préstamos registrados.</p>')+
+ '</div><div class="panel modern-panel"><div class="panel-heading"><h3>Sus eventos</h3></div>'+
+ (enroll.length?enroll.map(e=>'<a href="#eventos/'+e.id+'" class="history-row"><span class="history-icon">'+icon("calendar")+'</span>'+
+ '<span><strong>'+esc(e.title)+'</strong><small>'+prettyDate(e.date)+'</small></span><span class="history-arrow">↗</span></a>').join("") :
+ '<p class="muted">No está inscrito en ningún evento.</p>')+
+ '<div class="detail-buttons">'+actionButton("Nuevo préstamo","loan","plus","btn btn-primary")+'</div></div></div>';
+}
+function eventDetailView(e) {
+ const members=e.users.map(id=>user(id)).filter(Boolean),past=e.date<today(),full=e.users.length>=e.capacity;
+ return '<div class="detail-top">'+back("eventos","Volver a eventos")+'<span>EVENTOS / #'+String(e.id).padStart(3,"0")+'</span></div>'+
+ '<div class="event-detail-banner"><img src="'+photo({color:e.id+3},1400)+'" alt="Fotografía de libros reales">'+
+ '<div class="event-detail-overlay"><span class="eyebrow">ENCUENTRO CULTURAL</span><h1>'+esc(e.title)+'</h1><p>'+esc(e.description)+'</p></div></div>'+
+ '<div class="reader-summary event-summary">'+kpi(prettyDate(e.date),"Fecha del encuentro","calendar")+
+ kpi(e.users.length+" / "+e.capacity,"Inscripciones","users")+kpi(Math.max(0,e.capacity-e.users.length),"Plazas disponibles","check")+'</div>'+
+ '<div class="detail-lower"><div class="panel modern-panel"><div class="panel-heading"><h3>Personas inscritas</h3>'+
+ badge(past?"Finalizado":full?"Aforo completo":"Inscripciones abiertas",past?"gray":full?"red":"green")+'</div>'+
+ (members.length?members.map(u=>'<a class="history-row" href="#usuarios/'+u.id+'"><span class="avatar reader-avatar">'+
+ esc(avatarText(u.name))+'</span><span><strong>'+esc(u.name)+'</strong><small>'+esc(u.email)+'</small></span>'+
+ '<span class="history-arrow">↗</span></a>').join(""):'<p class="muted">Aún no hay inscritos.</p>')+'</div>'+
+ '<div class="panel modern-panel"><div class="panel-heading"><h3>Gestionar actividad</h3></div>'+
+ '<p class="muted">Controla la asistencia, cancela inscripciones o invita a lectores de la biblioteca.</p>'+
+ '<div class="detail-progress"><span style="width:'+Math.min(100,e.users.length/Math.max(1,e.capacity)*100)+'%"></span></div>'+
+ '<p class="muted">'+e.users.length+' de '+e.capacity+' plazas ocupadas</p>'+
+ (!past?actionButton("Gestionar inscripciones","signup","users","btn btn-primary",'data-id="'+e.id+'"'):'<p class="muted">Este evento ya ha finalizado.</p>')+
+ '</div></div>';
+}
+
   const views = {inicio:homeView,libros:booksView,prestamos:loansView,eventos:eventsView,usuarios:usersView,proyecto:projectView};
-  const labels = {inicio:"Vista general",libros:"Catálogo",prestamos:"Préstamos",eventos:"Eventos",usuarios:"Lectores",proyecto:"Sobre la API"};
-  function render() {
-    view = location.hash.replace(/^#/, "") in views ? location.hash.slice(1) : "inicio";
-    if (view === "inicio" && location.hash && !views[location.hash.slice(1)]) history.replaceState(null,"","#inicio");
-    $("#crumb-name").textContent = labels[view];
-    $$(".nav-link[data-view]").forEach(el => {
-      const isActive = el.dataset.view === view;
-      el.classList.toggle("active", isActive);
-      if (isActive) el.setAttribute("aria-current","page");
-      else el.removeAttribute("aria-current");
-    });
-    $("#view").innerHTML = views[view]();
-    $("#year").textContent = String(new Date().getFullYear());
-  }
+const labels = {inicio:"Vista general",libros:"Catálogo",prestamos:"Préstamos",eventos:"Eventos",usuarios:"Lectores",proyecto:"Sobre la API"};
+function render() {
+  const route = decodeURIComponent(location.hash.replace(/^#/,"").split("?")[0] || "inicio");
+  const parts=route.split("/"), root=parts[0], id=Number(parts[1]);
+  view = root in views ? root : "inicio";
+  if (view==="inicio" && route!=="inicio" && !(root in views)) history.replaceState(null,"","#inicio");
+  const selected = parts.length===2 && Number.isInteger(id) && id>0 ?
+    (root==="libros" ? book(id) : root==="prestamos" ? db.loans.find(p=>p.id===id) :
+      root==="eventos" ? event(id) : root==="usuarios" ? user(id) : null) : null;
+  $("#crumb-name").textContent = labels[view] + (selected ? " / Detalle" : "");
+  $$(".nav-link[data-view]").forEach(el=>{
+    const active=el.dataset.view===view;
+    el.classList.toggle("active",active);
+    if(active)el.setAttribute("aria-current","page");else el.removeAttribute("aria-current");
+  });
+  if(parts.length>1){
+    $("#view").innerHTML = selected ?
+      (root==="libros" ? bookDetailView(selected) : root==="prestamos" ? loanDetailView(selected) :
+       root==="eventos" ? eventDetailView(selected) : userDetailView(selected)) :
+      '<div class="notfound"><h1>Esta ficha no existe</h1><p>Quizás los datos de la demo se hayan restablecido.</p>'+
+      '<a class="btn btn-primary" href="#'+view+'">Volver al listado '+icon("arrow")+'</a></div>';
+  } else $("#view").innerHTML = views[view]();
+  $("#year").textContent = String(new Date().getFullYear());
+  document.title = (selected ? (selected.title || selected.name || selected.id) + " · " : "") +
+    "MrBibliomante · Biblioteca digital";
+}
   const modal = $("#modal");
   function openModal(title, body) {
     $("#modal-title").textContent = title;
@@ -303,7 +468,27 @@
         field("date","Fecha del evento","date",true,'min="' + daysFromNow(1) + '"') +
         field("capacity","Aforo máximo","number",true,'min="1" max="999" value="15"'),"Crear evento")); return;
     }
-    if (action === "loan") {
+    
+    if (action === "favorite") {
+      const idN=Number(id);
+      db.favorites = fav(idN) ? db.favorites.filter(x=>x!==idN) : [...db.favorites,idN];
+      save();render();toast(fav(idN)?"Libro guardado en favoritos.":"Eliminado de favoritos."); return;
+    }
+    if (action === "edit-book") {
+      const b=book(id);if(!b)return;
+      const orig=field("title","Título del libro","text",true,'maxlength="110"')+
+        field("author","Autor","text",true,'maxlength="100"')+
+        selectField("genre","Género",["Novela","Fantasía","Histórica","Distopía","Fábula","Realismo mágico","Ensayo","Poesía","Otros"].map(x=>opt(x,x)).join(""))+
+        field("isbn","ISBN (13 dígitos)","text",true,'pattern="[0-9]{13}" inputmode="numeric" maxlength="13"')+
+        field("copies","Ejemplares totales","number",true,'min="0" max="999"');
+      openModal("Editar ficha del libro","<p class='modal-desc'>Actualiza los datos y las existencias del título.</p>"+
+        form("form-edit-book",'<input type="hidden" name="bookId" value="'+b.id+'">'+orig,"Guardar cambios"));
+      ["title","author","genre","isbn","copies"].forEach((f,i)=>{
+        const el=$("#field-"+f);if(el)el.value=String([b.title,b.author,b.genre,b.isbn,b.copies][i] ?? "");
+      });
+      return;
+    }
+if (action === "loan") {
       if (!db.users.length || !db.books.some(b => available(b))) {
         toast("Añade un lector y un libro disponible antes de prestar.",true); return;
       }
@@ -375,7 +560,17 @@
     const d = Object.fromEntries(new FormData(formElement));
     const text = k => String(d[k] ?? "").trim();
     const validDate = x => /^\d{4}-\d{2}-\d{2}$/.test(x) && !Number.isNaN(Date.parse(x));
-    if (formElement.id === "form-book") {
+    
+    if(formElement.id==="form-edit-book"){
+      const b=book(d.bookId),copies=Number(d.copies);
+      if(!b||!Number.isInteger(copies)||copies<liveLoans(b.id).length||copies>999||
+        !/^\d{13}$/.test(text("isbn"))||db.books.some(other=>other.id!==b.id&&other.isbn===text("isbn"))){
+          toast("Comprueba ISBN y ejemplares: no puedes reducirlos por debajo de los préstamos activos.",true);return;
+      }
+      b.title=text("title");b.author=text("author");b.genre=text("genre");b.isbn=text("isbn");b.copies=copies;
+      addActivity("Ficha actualizada",b.title,"book");save();closeModal();render();toast("Cambios guardados.");return;
+    }
+if (formElement.id === "form-book") {
       if (!/^\d{13}$/.test(text("isbn")) || db.books.some(b => b.isbn === text("isbn"))) { toast("Introduce un ISBN de 13 cifras que no esté registrado.",true); return; }
       const copies = Number(d.copies);
       if (!Number.isInteger(copies) || copies < 1 || copies > 999) {toast("El número de ejemplares no es válido.",true);return;}
@@ -422,8 +617,18 @@
     }
     const go = ev.target.closest("[data-go]");
     if (go) location.hash = "#" + go.dataset.go;
+    const favView = ev.target.closest("[data-viewmode]");
+    if(favView){ viewMode=favView.dataset.viewmode;render();return; }
+    const loanButton = ev.target.closest("[data-loanfilter]");
+    if(loanButton){ loanFilter=loanButton.dataset.loanfilter;render();return; }
     const filterButton = ev.target.closest("[data-filter]");
     if (filterButton) { filter = filterButton.dataset.filter; render(); }
+  });
+  document.addEventListener("change", ev=>{
+    const sel=ev.target.closest("[data-select]");if(!sel)return;
+    if(sel.dataset.select==="genre")genreFilter=sel.value;
+    if(sel.dataset.select==="catalog-sort")catalogSort=sel.value;
+    render();
   });
   document.addEventListener("submit", ev => {
     if (!ev.target.matches("#modal-body form")) return;
